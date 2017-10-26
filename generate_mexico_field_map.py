@@ -5,7 +5,7 @@
 #
 # This program will generate a CIMMYT Mexico field map.
 #
-# A
+#
 
 import xlsxwriter
 
