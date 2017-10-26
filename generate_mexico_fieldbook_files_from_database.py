@@ -60,7 +60,6 @@ cmdline.add_argument('-y','--year',help='The iyear to generate fieldbook file fo
 cmdline.add_argument('-l','--location',help='The ilocation to generate fieldbook file for', default='OBR')
 cmdline.add_argument('-t','--trial',help='The itrial to generate fieldbook file for')
 cmdline.add_argument('-c','--condition',help='The icondition to generate fieldbook file for')
-cmdline.add_argument('-o','--outfile',help='The full path for the output file')
 
 
 args=cmdline.parse_args()
@@ -74,8 +73,6 @@ plotId=iyear+'-'+ilocation+'-'+itrial+'-'+icondition+'%'
 outFile=args.outfile
 fieldBookRecord=[]
 fieldBookList=[]
-
-
 
 print('Generating Field Book CSV file: ' + outFile + ' for: ', plotId)
 

@@ -5,7 +5,7 @@
 #
 # This program will generate a CIMMYT Mexico field map.
 #
-# A
+#
 
 import xlsxwriter
 
@@ -14,6 +14,7 @@ from mysql.connector import errorcode
 import config
 
 import sys
+import argparse
 
 def open_db_connection(config):
 
@@ -53,9 +54,27 @@ def close_db_connection(cursor,cnx):
 
     return
 
-plotId = '10-OBR-YTBW-B5I%'
+# Get command line input.
 
-workbook = xlsxwriter.Workbook('10-OBR-YTBW-B5I.xlsx')
+cmdline = argparse.ArgumentParser()
+cmdline.add_argument('-y','--year',help='The iyear to generate fieldbook file for')
+cmdline.add_argument('-l','--location',help='The ilocation to generate fieldbook file for', default='OBR')
+cmdline.add_argument('-t','--trial',help='The itrial to generate fieldbook file for')
+cmdline.add_argument('-c','--condition',help='The icondition to generate fieldbook file for')
+
+args=cmdline.parse_args()
+
+iyear=args.year
+ilocation=args.location
+itrial=args.trial
+icondition=args.condition
+plotId=iyear+'-'+ilocation+'-'+itrial+'-'+icondition+'%'
+
+outFile=iyear+'-'+ilocation+'-'+itrial+'-'+icondition+'_Field_Map.xlsx'
+
+# Open .xlsx output file and set up worksheet formatting
+
+workbook = xlsxwriter.Workbook(outFile)
 worksheet = workbook.add_worksheet()
 format = workbook.add_format()
 format.set_bg_color('#42f498')
@@ -71,8 +90,11 @@ merge_format = workbook.add_format({
     'valign':   'vcenter',
     'fg_color': '#D7E4BC',
 })
+# write the column label row to the worksheet
 
 worksheet.write_string(0, 0, 'Trial',merge_format)
+
+# Connect to database - One cursor per query
 
 print("")
 print("Connecting to Database...")
@@ -87,7 +109,11 @@ plotQuery = "SELECT plot_id,plot_no,trial,col,row,rep FROM plots WHERE plot_id L
 maxRowQuery = "SELECT MAX(row) FROM plots WHERE plot_id LIKE %s AND trial = %s"
 maxColQuery = "SELECT MAX(col) FROM plots WHERE plot_id LIKE %s AND trial = %s"
 
+# Query the list of distinct trials for the plotID
+
 cursorD.execute(trialQuery,(plotId,))
+
+# For each trial query the data required to build the field map and compute the range of rows and columns.
 
 trialCount = 0
 rowOffset=0
@@ -106,8 +132,9 @@ for rowD in cursorD:
     maxPlot=maxRow*maxCol
     print("Processing trial "+ mapTrial + ' (' + str(maxPlot) + " plots)")
 
-    plotCount=1
+# Write the plot data to the worksheet
 
+    plotCount=1
     for rowA in cursorA:
         mapRow =((maxRow + 1) - rowA[4]) + rowOffset
         mapCol=rowA[3]
@@ -124,9 +151,13 @@ for rowD in cursorD:
     worksheet.write_string(mapRow,0,mapTrial,format2)
     rowOffset+=maxRow + 1
     trialCount+=1
-titleStr="Field Map for "+ plotId[:-1]
 
+# write the title to the worksheet
+
+titleStr="Field Map for "+ plotId[:-1]
 worksheet.merge_range(0,1,0,maxCol,titleStr,merge_format)
+
+# Close all database connections, close the spreadsheet file and exit
 
 close_db_connection(cursorA,cnxA)
 close_db_connection(cursorB,cnxB)
