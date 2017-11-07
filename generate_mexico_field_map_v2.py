@@ -179,12 +179,10 @@ else:
     print("Starting position is undefined...exiting")
     sys.exit(0)
 
-#sheet=1 # Index of the first worksheet in the set to be generated
 startIndex=0 # Index of first plot in the first field map
 startCol=1
 for sheet in range(1,numSheets+1):
     endIndex=startIndex+maxPlotsPerSheet-1
-    print("Start " + str(startIndex) + " End ", str(endIndex), "Row Offset ", rowOffset)
     startPlot=plotList[startIndex]
     endPlot=plotList[endIndex]
     outFile = itrial + icondition + '_' + str(startPlot[1]) + '-' + str(endPlot[1]) + '.xlsx'
@@ -207,9 +205,9 @@ for sheet in range(1,numSheets+1):
     # Generate the spreadsheet entries for the border plots and label the row numbers at the end of the sheet
 
     for c in range(1,16):
-        worksheet.write_string(rowOffset+1, c, "Borlaug 100", format)
-    worksheet.write_number(rowOffset+1, 0, rowOffset+1, format2)
-    worksheet.write_string(rowOffset+1, 16, "RELLENO", format)
+        worksheet.write_string(lastPlotRow+1, c, "Borlaug 100", format)
+    worksheet.write_number(lastPlotRow+1, 0, lastPlotRow+1, format2)
+    worksheet.write_string(lastPlotRow+1, 16, "RELLENO", format)
 
     # Generate the data for the plots in the first sheet
 
@@ -261,6 +259,8 @@ for sheet in range(1,numSheets+1):
 
     worksheet.write_string(52, 1, "2ST/2.8M", format2)
 
+    worksheet.set_landscape()
+    worksheet.fit_to_pages(1,1)
 
     workbook.close()
     rowOffset=43
