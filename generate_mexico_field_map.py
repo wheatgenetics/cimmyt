@@ -103,11 +103,10 @@ cursorB,cnxB=open_db_connection(config)
 cursorC,cnxC=open_db_connection(config)
 cursorD,cnxD=open_db_connection(config)
 
-
-trialQuery="SELECT DISTINCT trial FROM plots WHERE plot_id LIKE %s ORDER by tid"
 plotQuery = "SELECT plot_id,plot_no,trial,col,row,rep FROM plots WHERE plot_id LIKE %s AND trial = %s ORDER BY plot_no"
 maxRowQuery = "SELECT MAX(row) FROM plots WHERE plot_id LIKE %s AND trial = %s"
 maxColQuery = "SELECT MAX(col) FROM plots WHERE plot_id LIKE %s AND trial = %s"
+trialQuery="SELECT DISTINCT trial FROM plots WHERE plot_id LIKE %s ORDER by tid"
 
 # Query the list of distinct trials for the plotID
 
