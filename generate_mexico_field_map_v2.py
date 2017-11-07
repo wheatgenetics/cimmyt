@@ -10,7 +10,6 @@
 # Note Row and Column Indices in xlsxWriter are zero based.
 #
 #
-#
 
 import xlsxwriter
 
