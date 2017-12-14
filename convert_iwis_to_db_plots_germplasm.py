@@ -87,7 +87,7 @@ location=locations[ilocation]
 seedSource = None
 purpose = None
 plantingDate = None
-site = None
+site = 'CENEB-810'
 col = None
 row = None
 
@@ -110,7 +110,10 @@ for item in data['Sheet1']:
         trial=data['Sheet1'][index][1]
         if 'BW' in trial:
             itrial = data['Sheet1'][index][1].split('BW')[0]+'BW'
-            condition = data['Sheet1'][index][1].split('BW')[1].split('_')[0]
+            if itrial=='YTBW':
+                condition='B5IR'
+            else:
+                condition = data['Sheet1'][index][1].split('BW')[1].split('_')[0]
             icondition = iconditions[condition]
         elif 'HP' in trial:
             itrial = data['Sheet1'][index][1].split('HP')[0] + 'HP'
@@ -150,7 +153,6 @@ for item in data['Sheet1']:
 # Connect to database and return two cursors: One for insert into the plots table and
 # one for insert into germplasm table
 
-sys.exit()
 
 try:
     cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD, host=test_config.HOST,
@@ -180,7 +182,7 @@ try:
     plotInserts=0
     for plotId,p in plotDict.items():
         plotRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11],p[12],p[13],p[14],p[15],p[16],p[17],p[18],p[19],p[20],p[21],p[22])
-        print(plotInserts,plotRow)
+        #print(plotInserts,plotRow)
         cursorA.execute(insert_plot,plotRow)
 
         plotInserts+=1
@@ -204,7 +206,7 @@ try:
     germplasmInserts=0
     for plotId,g in germplasmDict.items():
         germplasmRow=(g[0],g[1],g[2],g[3],g[4])
-        print(germplasmInserts,germplasmRow)
+        #print(germplasmInserts,germplasmRow)
         cursorB.execute(insert_germplasm,germplasmRow)
         germplasmInserts+=1
     cnx.commit()
