@@ -56,8 +56,13 @@ plotDict=OrderedDict()
 germplasmDict = OrderedDict()
 
 # condition is a dictionary that translates from CIMMYT database icondition to IWIS condition
-condition={}
-condition['B5I']='Bed5IR'
+iconditions={}
+iconditions['B5IR']='B5I'
+iconditions['B2IR']='B2I'
+iconditions['BLHT']='LHT'
+iconditions['F5IR']='F5I'
+iconditions['BEHT']='EHT'
+iconditions['DRIP']='DRM'
 
 # location is a dictionary that translates from CIMMYT database ilocation to IWIS location
 
@@ -69,7 +74,7 @@ locations['OBR']='Obregon'
 cmdline = argparse.ArgumentParser()
 cmdline.add_argument('-i','--input',help='IWIS input file')
 cmdline.add_argument('-l','--location',help='Location of the plots', default='OBR')
-cmdline.add_argument('-c','--icondition',help='Condition associated with a trial', default='B5I')
+#cmdline.add_argument('-c','--icondition',help='Condition associated with a trial', default='B5I')
 
 args=cmdline.parse_args()
 
@@ -77,8 +82,8 @@ args=cmdline.parse_args()
 inputFile=args.input
 ilocation=args.location
 location=locations[ilocation]
-icondition=args.icondition
-conditions=condition[icondition]
+#icondition=args.icondition
+#conditions=condition[icondition]
 seedSource = None
 purpose = None
 plantingDate = None
@@ -91,7 +96,7 @@ row = None
 data = get_data(inputFile)
 
 print()
-print('Processing IWIS file`: ' + inputFile)
+print('Processing IWIS file: ' + inputFile)
 
 index = 0
 for item in data['Sheet1']:
@@ -102,10 +107,19 @@ for item in data['Sheet1']:
         occ = data['Sheet1'][index][1]
         print('OCC',occ)
     elif index == 2:
-        itrial = data['Sheet1'][index][1].split('_')[0]
-        trial = data['Sheet1'][index][1]
+        trial=data['Sheet1'][index][1]
+        if 'BW' in trial:
+            itrial = data['Sheet1'][index][1].split('BW')[0]+'BW'
+            condition = data['Sheet1'][index][1].split('BW')[1].split('_')[0]
+            icondition = iconditions[condition]
+        elif 'HP' in trial:
+            itrial = data['Sheet1'][index][1].split('HP')[0] + 'HP'
+            condition = data['Sheet1'][index][1].split('HP')[1].split('_')[0]
+            icondition=iconditions[condition]
         print('itrial:',itrial)
-        print ('trial:',trial)
+        print('trial:',trial)
+        print('icondition:',icondition)
+        print('conditions:',condition)
     elif index == 4:
         iyear = data['Sheet1'][index][1].split('-')[1]
         year = '20'+iyear
@@ -128,7 +142,7 @@ for item in data['Sheet1']:
         entry = str(data['Sheet1'][index][9])
 
         plotId=iyear + '-' + ilocation + '-' + itrial + '-' + icondition + '-' + plot
-        plotDict[plotId]=[plotId,iyear,ilocation,itrial,icondition,plot,trial,seedSource,plantingDate,site,year,location,cycle,conditions,rep,block,col,row,entry,purpose,gid,tid,occ]
+        plotDict[plotId]=[plotId,iyear,ilocation,itrial,icondition,plot,trial,seedSource,plantingDate,site,year,location,cycle,condition,rep,block,col,row,entry,purpose,gid,tid,occ]
         germplasmDict[gid]=[gid,cid,sid,selectionHistory,crossName]
 
     index+=1
@@ -136,6 +150,7 @@ for item in data['Sheet1']:
 # Connect to database and return two cursors: One for insert into the plots table and
 # one for insert into germplasm table
 
+sys.exit()
 
 try:
     cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD, host=test_config.HOST,
