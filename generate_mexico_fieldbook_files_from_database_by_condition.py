@@ -83,7 +83,7 @@ fieldBookList=[]
 fieldBookQuery="Select plots.plot_id,plots.plot_no,plots.rep,plots.entry,plots.trial " \
                "as trial,germplasm.gid,germplasm.cross_name as pedigree from plots,germplasm " \
                "where plots.gid=germplasm.gid and (plots.iyear=%s and plots.ilocation=%s and plots.icondition=%s) " \
-               "order by plots.plot_no"
+               "order by trial,plots.plot_id"
 
 
 print("")
