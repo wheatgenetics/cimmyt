@@ -171,23 +171,32 @@ except mysql.connector.Error as err:
 else:
     cursorA = cnx.cursor(buffered=True)
     cursorB = cnx.cursor(buffered=True)
+    cursorC = cnx.cursor(buffered=True)
+    cursorD = cnx.cursor(buffered=True)
 
 
 # Insert data into plots table. Exit if any error occurs, only commit changes when all updates are made.
 
+count_plots = "SELECT * from plots"
 insert_plot = "INSERT INTO plots (plot_id,iyear,ilocation,itrial,icondition,plot_no,trial,seed_source,planting_date,site,year,location,cycle,conditions,rep,block,col,row,entry,purpose,gid,tid,occ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 try:
     print("Inserting data into plots table...")
+    cursorC.execute(count_plots,)
+    startPlotCount=cursorC.rowcount
     plotInserts=0
     for plotId,p in plotDict.items():
         plotRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11],p[12],p[13],p[14],p[15],p[16],p[17],p[18],p[19],p[20],p[21],p[22])
-        #print(plotInserts,plotRow)
         cursorA.execute(insert_plot,plotRow)
-
         plotInserts+=1
     cnx.commit()
     cursorA.close()
+    cursorC.execute(count_plots,)
+    endPlotCount = cursorC.rowcount
+    print("Plot Records Processed :" + str(plotInserts))
+    print("Plot Records Inserted: " + str(endPlotCount-startPlotCount))
+    print()
+    cursorC.close()
 except mysql.connector.Error as err:
     print()
     print('An error occurred while attempting to insert data into CIMMYT database plots table. Exiting...')
@@ -199,18 +208,25 @@ except mysql.connector.Error as err:
 # Insert data into germplasm table. Exit if any error occurs, only commit changes when all updates are made.
 # Note that INSERT IGNORE allows duplicate key errors to be ignored and processing to continue
 
+count_germplasm = "SELECT * FROM germplasm"
 insert_germplasm = "INSERT IGNORE INTO germplasm (gid,cid,sid,selection_history,cross_name) VALUES (%s,%s,%s,%s,%s)"
 
 try:
     print("Inserting data into germplasm table...")
+    cursorD.execute(count_germplasm, )
+    startGermplasmCount=cursorD.rowcount
     germplasmInserts=0
     for plotId,g in germplasmDict.items():
         germplasmRow=(g[0],g[1],g[2],g[3],g[4])
-        #print(germplasmInserts,germplasmRow)
         cursorB.execute(insert_germplasm,germplasmRow)
         germplasmInserts+=1
     cnx.commit()
     cursorB.close()
+    cursorD.execute(count_germplasm, )
+    endGermplasmCount = cursorD.rowcount
+    print("Germplasm Records Processed :" + str(germplasmInserts))
+    print("Unique Germplasm Records Inserted: " + str(endGermplasmCount - startGermplasmCount))
+    cursorD.close()
 except mysql.connector.Error as err:
     print()
     print('An error occurred while attempting to insert data into CIMMYT database germplasm table. Exiting...')
