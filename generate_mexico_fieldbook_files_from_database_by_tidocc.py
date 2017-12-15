@@ -1,9 +1,10 @@
 #! /usr/bin/python
 #
-# Program: generate_mexico_fieldbook_files_from_database.py
+# Program: generate_mexico_fieldbook_files_from_database by condition.py
 # Version: 0.1 October 26,2017 Initial Version
 #
 # Program to generate Mexico fieldbook data files from CIMMYT plots and germplasm tables.
+# The program will generate one file for a given tid occ combination (i.e. for one trial)
 #
 #
 
