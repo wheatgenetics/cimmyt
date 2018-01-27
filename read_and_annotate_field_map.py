@@ -106,6 +106,11 @@ numRows=fieldMap.shape[0]
 numCols=fieldMap.shape[1]
 r=range(numRows)
 c=range(numCols)
+print('Rows:',r)
+print('Columns:',c)
+
+plotColOffset=2
+plotRowOffset=0
 
 # Connect to database - Create one cursor per query
 
@@ -123,22 +128,29 @@ format = workbook.add_format()
 worksheet.set_column(2, 16, 30.0)
 format.set_border()
 
-# Write the header row for the workbook
+# Write the header row for the workbook and get the list of column subscripts
+columnList=[]
 for column in range(numCols):
     if str(fieldMap.axes[1][column]).isdigit():
         worksheet.write_number(0, column, fieldMap.axes[1][column], format)
+        columnList.append(fieldMap.axes[1][column])
     else:
         worksheet.write_string(0, column, '', format)
+
+# Get the list of row subscripts
+rowList=[]
+for row in range(numRows-1):
+    rowList.append(fieldMap.iloc[row:row + 1].values[0,0])
 
 # Write the rest of rows of the workbook
 for row in range(numRows):
    for column in range(numCols):
        cellValue=str(fieldMap.iloc[row:row + 1, column:column + 1].values[0,0])
        isPlotNumber=cellValue.isdigit()
-       if (column >=2 and column <=numCols-1) and (row<=numRows-2) and isPlotNumber:
+       if (column >=plotColOffset and column <=numCols-1) and (row<=numRows-2) and isPlotNumber:
             fullPlotId=plotPrefix+cellValue
-            mapPlotRow=str(column+1 -2)
-            mapPlotCol=str(row+1)
+            mapPlotRow=str(columnList[column-plotColOffset])
+            mapPlotCol=str(rowList[row])
             mapPlot='R:'+ mapPlotRow +' C:'+  mapPlotCol + ' ' + fullPlotId
             worksheet.write_string(row+1,column,mapPlot, format)
             cursorA.execute(updatePlot, (int(mapPlotRow),int(mapPlotCol),fullPlotId))
