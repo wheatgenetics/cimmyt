@@ -2,6 +2,7 @@
 #
 # Program: convert_cimmyt_asia_table_to_database_format.py
 # Version: 0.1 October 18,2017 Initial Version
+# Version: 0.2 January 22,2018 NB Fixed error where itrial and icondition columns were swapped - line 110
 #
 # Program to generate database load files from phenotype spreadsheet from India/Bangla Desh/Pakistan
 #
@@ -106,8 +107,9 @@ with open(tableFile,'rU') as csvFile:
 #
 with open(dbFile, 'w') as csvfile:
     header = csv.writer(csvfile)
-    header.writerow(
+    #header.writerow(
         ['plot_id','iyear','ilocation','icondition','itrial','plot_no','trait_id','phenotype_value','phenotype_date'])
+    header.writerow(['plot_id', 'iyear', 'ilocation', 'itrial','icondition',  'plot_no', 'trait_id', 'phenotype_value', 'phenotype_date'])
 csvfile.close()
 
 with open(dbFile, 'a') as csvfile:
