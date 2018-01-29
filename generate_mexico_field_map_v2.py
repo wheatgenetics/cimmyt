@@ -62,10 +62,10 @@ def close_db_connection(cursor,cnx):
 # Note that some of these may be input via other means in the future e.g. reading from a document of spreadsheet.
 
 cmdline = argparse.ArgumentParser()
-cmdline.add_argument('-y','--year',help='The iyear to generate fieldbook file for')
-cmdline.add_argument('-l','--location',help='The ilocation to generate fieldbook file for', default='OBR')
-cmdline.add_argument('-t','--trial',help='The itrial to generate fieldbook file for')
-cmdline.add_argument('-c','--condition',help='The icondition to generate fieldbook file for')
+cmdline.add_argument('-y','--year',help='The iyear to generate field map file for')
+cmdline.add_argument('-l','--location',help='The ilocation to generate field map file for', default='OBR')
+cmdline.add_argument('-t','--trial',help='The itrial to generate field map file for')
+cmdline.add_argument('-c','--condition',help='The icondition to generate field map file for')
 cmdline.add_argument('-p','--planting', help='The planting date')
 cmdline.add_argument('-s','--startplot', help='The starting plot number for each planting date')
 cmdline.add_argument('-e','--endplot', help='The ending plot number for each planting date')
