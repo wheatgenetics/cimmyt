@@ -125,7 +125,8 @@ updatePlot='UPDATE plots SET row=%s,col=%s WHERE plot_id = %s'
 workbook = xlsxwriter.Workbook(fieldMapOutFile)
 worksheet = workbook.add_worksheet()
 format = workbook.add_format()
-worksheet.set_column(2, 16, 30.0)
+worksheet.set_column(2, 16, 40.0)
+worksheet.set_column(18,18, 15.0)
 format.set_border()
 
 # Write the header row for the workbook and get the list of column subscripts
