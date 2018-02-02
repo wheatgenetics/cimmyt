@@ -26,19 +26,19 @@ import xlsxwriter
 
 import mysql.connector
 from mysql.connector import errorcode
-import test_config
+import config
 
 import sys
 import os
 import argparse
 
-def open_db_connection(test_config):
+def open_db_connection(config):
 
     # Connect to the HTP database
         try:
-            cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD,
-                                          host=test_config.HOST, port=test_config.PORT,
-                                          database=test_config.DATABASE)
+            cnx = mysql.connector.connect(user=config.USER, password=config.PASSWORD,
+                                          host=config.HOST, port=config.PORT,
+                                          database=config.DATABASE)
             print('Connecting to Database: ' + cnx.database)
 
         except mysql.connector.Error as err:
@@ -120,7 +120,7 @@ plotRowOffset = 0
 
 print("")
 print("Connecting to Database...")
-cursorA,cnxA=open_db_connection(test_config)
+cursorA,cnxA=open_db_connection(config)
 updatePlot='UPDATE plots SET row=%s,col=%s WHERE plot_id = %s'
 
 # Open .xlsx output file and set up worksheet formatting

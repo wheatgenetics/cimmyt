@@ -23,8 +23,7 @@ import xlsxwriter
 
 import mysql.connector
 from mysql.connector import errorcode
-#import config
-import test_config
+import config
 
 import sys
 import os
@@ -116,7 +115,7 @@ plotRowOffset=0
 
 print("")
 print("Connecting to Database...")
-cursorA,cnxA=open_db_connection(test_config)
+cursorA,cnxA=open_db_connection(config)
 updatePlot='UPDATE plots SET row=%s,col=%s WHERE plot_id = %s'
 #selectPlot='SELECT * FROM plots WHERE plot_id LIKE %s'
 #cursorA.execute(selectPlot, (plotId,))
