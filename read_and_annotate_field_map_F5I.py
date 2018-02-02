@@ -1,12 +1,15 @@
 #! /usr/bin/python
 #
-# Program: read_and_annotate_field_map.py
+# Program: read_and_annotate_field_map_f5I.py
 #
-# Version: 0.1 January 23,2018 Initial Version
+# Version: 0.1 January 31,2018 Initial Version
 #
-# This program will read a CIMMYT Mexico field map in xlsx format, look up the full plot_id for each plot in the plots
-# table, generate annotation data for each plot-no with full plot_id, row and column identifiers and generate a new
-# field map including the annotated plot_id information.
+# N.B. For some reason, F5I plots have a different spreadsheet layout than other plots (in terms or where the
+# spreadsheet rows and columns start.)
+#
+# This program will read a CIMMYT Mexico field map for F5I plots in xlsx format, look up the full plot_id for each plot
+# in the plots table, generate annotation data for each plot-no with full plot_id, row and column identifiers and
+# generate a new field map including the annotated plot_id information.
 #
 # As a secondary task it will populate the row,column database columns for each plot
 #
@@ -101,25 +104,15 @@ print('Processing plots: '+ plotId)
 # Read in the field map input file and determine the dimensions of the field map
 
 fieldMap = pd.read_excel(fieldMapInFile)
-a=fieldMap.as_matrix()
-if icondition=='F5I':
-    numRows=len(fieldMap.axes[0].levels[0])
-    numCols=len(fieldMap.axes[1])
-else:
-    numRows=fieldMap.shape[0]
-    numCols=fieldMap.shape[1]
-
+numRows=len(fieldMap.axes[0].levels[0])
+numCols=len(fieldMap.axes[1])
 r=range(numRows)
 c=range(numCols)
 print('Rows:',r)
 print('Columns:',c)
 
-if icondition=='F5I':
-    plotColOffset = 0
-    plotRowOffset = 0
-else:
-    plotColOffset=2
-    plotRowOffset=0
+plotColOffset = 1
+plotRowOffset = 0
 
 # Connect to database - Create one cursor per query
 
@@ -127,84 +120,52 @@ print("")
 print("Connecting to Database...")
 cursorA,cnxA=open_db_connection(test_config)
 updatePlot='UPDATE plots SET row=%s,col=%s WHERE plot_id = %s'
-#selectPlot='SELECT * FROM plots WHERE plot_id LIKE %s'
-#cursorA.execute(selectPlot, (plotId,))
 
 # Open .xlsx output file and set up worksheet formatting
 workbook = xlsxwriter.Workbook(fieldMapOutFile)
 worksheet = workbook.add_worksheet()
 format = workbook.add_format()
 format.set_border()
-
-if icondition=='F5I':
-    worksheet.set_column(2, 17, 40.0)
-    worksheet.set_column(19,19, 15.0)
-else:
-    worksheet.set_column(2, 16, 40.0)
-    worksheet.set_column(18,18, 15.0)
+worksheet.set_column(2, 17, 40.0)
+worksheet.set_column(19,19, 15.0)
 
 # Write the header row for the workbook and get the list of column subscripts
 columnList=[]
 for column in range(numCols):
     if str(fieldMap.axes[1][column]).isdigit():
-        worksheet.write_number(0, column, fieldMap.axes[1][column], format)
+        worksheet.write_number(0, column+2, fieldMap.axes[1][column], format)
         columnList.append(fieldMap.axes[1][column])
     else:
         worksheet.write_string(0, column, '', format)
 
 # Get the list of row subscripts
 rowList=[]
-if icondition=='F5I':
-    for row in range(numRows-1):
-            #rowList.append(fieldMap.iloc[row:row + 1].values[0,0])
-            if str(fieldMap.axes[0].levels[0][row]).isdigit():
-                rowList.append(fieldMap.axes[0].levels[0][row])
-                pass
-else:
-    for row in range(numRows-1):
-        rowList.append(fieldMap.iloc[row:row + 1].values[0,0])
-        pass
-if icondition=='F5I':
-    # Write the rest of rows of the workbook
-    for row in range(numRows):
-        for column in range(numCols):
-            cellValue = str(fieldMap.iloc[row:row + 1, column:column + 1].values[0, 0])
-            isPlotNumber = cellValue.isdigit()
-            if (column >= plotColOffset and column <= numCols - 1) and (row <= numRows - 2) and isPlotNumber:
-                fullPlotId = plotPrefix + cellValue
-                mapPlotRow = str(columnList[column - plotColOffset])
-                mapPlotCol = str(rowList[row])
-                mapPlot = 'R:' + mapPlotRow + ' C:' + mapPlotCol + ' ' + fullPlotId
-                #worksheet.write_string(row + 1, column, mapPlot, format)
-                worksheet.write_string(row, column+2, mapPlot, format)
-                cursorA.execute(updatePlot, (int(mapPlotRow), int(mapPlotCol), fullPlotId))
-                cnxA.commit()
-            elif cellValue != 'nan':
-                #worksheet.write_string(row + 1, column, cellValue, format)
-                worksheet.write_string(row, column, cellValue, format)
-                pass
-            else:
-                #worksheet.write_string(row + 1, column, '', format)
-                worksheet.write_string(row, column, '', format)
-                pass
-else:
-    # Write the rest of rows of the workbook
-    for row in range(numRows):
-       for column in range(numCols):
-           cellValue=str(fieldMap.iloc[row:row + 1, column:column + 1].values[0,0])
-           isPlotNumber=cellValue.isdigit()
-           if (column >=plotColOffset and column <=numCols-1) and (row<=numRows-2) and isPlotNumber:
-                fullPlotId=plotPrefix+cellValue
-                mapPlotRow=str(columnList[column-plotColOffset])
-                mapPlotCol=str(rowList[row])
-                mapPlot='R:'+ mapPlotRow +' C:'+  mapPlotCol + ' ' + fullPlotId
-                worksheet.write_string(row+1,column,mapPlot, format)
-                cursorA.execute(updatePlot, (int(mapPlotRow),int(mapPlotCol),fullPlotId))
-                cnxA.commit()
-           elif cellValue!='nan':
-               worksheet.write_string(row+1,column,cellValue,format)
-           else:
-               worksheet.write_string(row+1, column, '', format)
+for row in range(numRows-1):
+        if str(fieldMap.axes[0].levels[0][row]).isdigit():
+            rowList.append(fieldMap.axes[0].levels[0][row])
+            worksheet.write_number(row + 1,0,fieldMap.axes[0].levels[0][row], format)
+            print(fieldMap.axes[0].levels[0][row])
+            pass
+
+# Write the rest of rows of the workbook
+for row in range(numRows):
+    for column in range(numCols):
+        cellValue = str(fieldMap.iloc[row:row + 1, column:column + 1].values[0, 0])
+        isPlotNumber = cellValue.isdigit()
+        if (column >= plotColOffset and column <= numCols - 1) and (row <= numRows - 2) and isPlotNumber:
+            fullPlotId = plotPrefix + cellValue
+            mapPlotRow = str(columnList[column - plotColOffset])
+            mapPlotCol = str(rowList[row])
+            mapPlot = 'R:' + mapPlotRow + ' C:' + mapPlotCol + ' ' + fullPlotId
+            worksheet.write_string(row + 1, column+1, mapPlot, format)
+            cursorA.execute(updatePlot, (int(mapPlotRow), int(mapPlotCol), fullPlotId))
+            cnxA.commit()
+        elif cellValue != 'nan':
+            worksheet.write_string(row + 1, column+1, cellValue, format)
+            pass
+        else:
+            worksheet.write_string(row + 1, column+1, '', format)
+            pass
 
 worksheet.set_landscape()
 worksheet.fit_to_pages(1,1)
