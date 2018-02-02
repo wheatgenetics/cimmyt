@@ -106,12 +106,14 @@ print('Processing plots: '+ plotId)
 fieldMap = pd.read_excel(fieldMapInFile)
 numRows=len(fieldMap.axes[0].levels[0])
 numCols=len(fieldMap.axes[1])
+#numRows=fieldMap.shape[0]
+#numCols=fieldMap.shape[1]
 r=range(numRows)
 c=range(numCols)
 print('Rows:',r)
 print('Columns:',c)
 
-plotColOffset = 1
+plotColOffset = 0
 plotRowOffset = 0
 
 # Connect to database - Create one cursor per query
@@ -126,17 +128,19 @@ workbook = xlsxwriter.Workbook(fieldMapOutFile)
 worksheet = workbook.add_worksheet()
 format = workbook.add_format()
 format.set_border()
-worksheet.set_column(2, 17, 40.0)
-worksheet.set_column(19,19, 15.0)
+worksheet.set_column(1, 1, 12.0)
+worksheet.set_column(2, 16, 30.0)
+worksheet.set_column(18, 18, 20.0)
 
 # Write the header row for the workbook and get the list of column subscripts
 columnList=[]
 for column in range(numCols):
-    if str(fieldMap.axes[1][column]).isdigit():
-        worksheet.write_number(0, column+2, fieldMap.axes[1][column], format)
-        columnList.append(fieldMap.axes[1][column])
+    colLabel = fieldMap.axes[1][column]
+    if str(colLabel).isdigit():
+        columnList.append(colLabel)
+        worksheet.write_number(0, column + 1, colLabel, format)
     else:
-        worksheet.write_string(0, column, '', format)
+        worksheet.write_string(0, column+1, '', format)
 
 # Get the list of row subscripts
 rowList=[]
@@ -144,11 +148,8 @@ for row in range(numRows-1):
         if str(fieldMap.axes[0].levels[0][row]).isdigit():
             rowList.append(fieldMap.axes[0].levels[0][row])
             worksheet.write_number(row + 1,0,fieldMap.axes[0].levels[0][row], format)
-            print(fieldMap.axes[0].levels[0][row])
-            pass
-
 # Write the rest of rows of the workbook
-for row in range(numRows):
+for row in range(numRows-1):
     for column in range(numCols):
         cellValue = str(fieldMap.iloc[row:row + 1, column:column + 1].values[0, 0])
         isPlotNumber = cellValue.isdigit()
@@ -162,10 +163,8 @@ for row in range(numRows):
             cnxA.commit()
         elif cellValue != 'nan':
             worksheet.write_string(row + 1, column+1, cellValue, format)
-            pass
         else:
             worksheet.write_string(row + 1, column+1, '', format)
-            pass
 
 worksheet.set_landscape()
 worksheet.fit_to_pages(1,1)
