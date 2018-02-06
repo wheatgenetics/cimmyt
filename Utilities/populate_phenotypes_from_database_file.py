@@ -72,7 +72,6 @@ for item in data[wksheet]:
         phenotypeList.append(phenotypeRecord)
 
     index+=1
-    print(index)
 
 print("")
 print("Connecting to Database...")
