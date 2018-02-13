@@ -3,6 +3,7 @@
 # Program: read_and_annotate_field_map.py
 #
 # Version: 0.1 January 23,2018 Initial Version
+# Version: 0.2 February 6,2018 Corrected error where row and column were transposed.
 #
 # This program will read a CIMMYT Mexico field map in xlsx format, look up the full plot_id for each plot in the plots
 # table, generate annotation data for each plot-no with full plot_id, row and column identifiers and generate a new
@@ -23,19 +24,19 @@ import xlsxwriter
 
 import mysql.connector
 from mysql.connector import errorcode
-import config
+import test_config
 
 import sys
 import os
 import argparse
 
-def open_db_connection(config):
+def open_db_connection(test_config):
 
     # Connect to the HTP database
         try:
-            cnx = mysql.connector.connect(user=config.USER, password=config.PASSWORD,
-                                          host=config.HOST, port=config.PORT,
-                                          database=config.DATABASE)
+            cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD,
+                                          host=test_config.HOST, port=test_config.PORT,
+                                          database=test_config.DATABASE)
             print('Connecting to Database: ' + cnx.database)
 
         except mysql.connector.Error as err:
@@ -115,7 +116,7 @@ plotRowOffset=0
 
 print("")
 print("Connecting to Database...")
-cursorA,cnxA=open_db_connection(config)
+cursorA,cnxA=open_db_connection(test_config)
 updatePlot='UPDATE plots SET row=%s,col=%s WHERE plot_id = %s'
 #selectPlot='SELECT * FROM plots WHERE plot_id LIKE %s'
 #cursorA.execute(selectPlot, (plotId,))
@@ -149,8 +150,10 @@ for row in range(numRows):
        isPlotNumber=cellValue.isdigit()
        if (column >=plotColOffset and column <=numCols-1) and (row<=numRows-2) and isPlotNumber:
             fullPlotId=plotPrefix+cellValue
-            mapPlotRow=str(columnList[column-plotColOffset])
-            mapPlotCol=str(rowList[row])
+            #mapPlotRow=str(columnList[column-plotColOffset])
+            #mapPlotCol=str(rowList[row])
+            mapPlotCol = str(columnList[column - plotColOffset])
+            mapPlotRow = str(rowList[row])
             mapPlot='R:'+ mapPlotRow +' C:'+  mapPlotCol + ' ' + fullPlotId
             worksheet.write_string(row+1,column,mapPlot, format)
             cursorA.execute(updatePlot, (int(mapPlotRow),int(mapPlotCol),fullPlotId))
