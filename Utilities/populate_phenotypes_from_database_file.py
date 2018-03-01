@@ -2,10 +2,36 @@
 #
 # Program: populate_phenotypes_from_database_file.py
 # Version: 0.1 September 29,2017 Initial Version
+# Version: 0.2 March 1,2018 Added support for populating plots and germplasm tables.
 #
 # Program to load CIMMYT phenotypes table from CIMMYT database file.
 #
+# Assumed order of columns in input file:
+# 0 plot_id
+# 1 iyear
+# 2 ilocation
+# 3 itrial
+# 4 icondition
+# 5 occ
+# 6 trial
+# 7 cid
+# 8 sid
+# 9 gid
+# 10 cross_name
+# 11 selection_history
+# 12 origin
+# 13 plot
+# 14 rep
+# 15 block
+# 16 entry
+# 17 phenotype_date
+# 18 trait_id
+# 19 phenotype_value
+#
 # N.B. Check order of columns in input file as it is not consistently the same!!
+#
+#
+# TO DO Add a file_format command line parameter to cater for different file layouts, then support different mappings.
 #
 #
 
@@ -64,11 +90,21 @@ for item in data[wksheet]:
         occ =data[wksheet][index][5]
         trial=data[wksheet][index][6]
         cid=data[wksheet][index][7]
+        if cid =='':
+            cid=None
         sid = data[wksheet][index][8]
+        if sid == '':
+            sid = None
         gid = data[wksheet][index][9]
+        if gid == '':
+            gid = None
         crossName= data[wksheet][index][10]
         selectionHistory = data[wksheet][index][11]
+        if selectionHistory == '':
+            selectionHistory=None
         origin = data[wksheet][index][12]
+        if origin == '':
+            origin=None
         plot = str(data[wksheet][index][13])
         rep = str(data[wksheet][index][14])
         block = str(data[wksheet][index][15])
@@ -155,6 +191,8 @@ for p in plotList:
     except mysql.connector.Error as err:
         if err.errno==errorcode.ER_DUP_ENTRY:
             continue
+        elif err.errno==errorcode.ER_BAD_NULL_ERROR:
+            continue
         else:
             print(err,plotInserts,p[20])
 
@@ -173,6 +211,8 @@ for g in germplasmList:
         germplasmInserts+=1
     except mysql.connector.Error as err:
         if err.errno==errorcode.ER_DUP_ENTRY:
+            continue
+        elif err.errno==errorcode.ER_BAD_NULL_ERROR:
             continue
         else:
             print(err,germplasmInserts,g[0])
