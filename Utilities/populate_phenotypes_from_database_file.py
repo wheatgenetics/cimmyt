@@ -172,6 +172,9 @@ else:
 insert_plot = "INSERT INTO plots () VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 plotInserts=0
 
+print("")
+print("Inserting plot records...")
+
 for p in plotList:
     try:
         plotRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11],p[12],p[13],p[14],p[15],p[16],p[17],p[18],
@@ -186,15 +189,17 @@ for p in plotList:
             continue
         else:
             print(err,plotInserts,p[20])
-
 cursorB.close()
 
 # Insert the phenotypes data
 
 insert_phenotype = "INSERT INTO phenotypes (plot_id,iyear,ilocation,itrial,icondition,plot_no,trait_id,phenotype_value," \
                    "phenotype_date,phenotype_person) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-
 phenoInserts=0
+
+print("")
+print("Inserting phenotype records...")
+
 for p in phenotypeList:
     try:
         phenoRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9])
@@ -202,13 +207,17 @@ for p in phenotypeList:
         cnx.commit()
         phenoInserts+=1
     except mysql.connector.Error as err:
-        print(err)
+        print(err) # Program will exit if error occurs
 cursorA.close()
 
 # Insert the germplasm data - ignore rows where gid is not present.
 
 insert_germplasm = "INSERT INTO germplasm () Values(%s,%s,%s,%s,%s)"
 germplasmInserts=0
+
+print("")
+print("Inserting germplasm records...")
+
 for g in germplasmList:
     try:
         germplasmRow=(g[0],g[1],g[2],g[3],g[4])
@@ -222,13 +231,13 @@ for g in germplasmList:
             continue
         else:
             print(err,germplasmInserts,g[0])
+cursorC.close()
 
-
-
-print("Input Records processed: ",inputRecordCount)
-print("Phenotye Records inserted : ",phenoInserts)
-print("Plot Records Inserted: ",plotInserts)
-print("Germplasm Records Inserted: ", germplasmInserts)
+print("")
+print("Input Records processed:     ",inputRecordCount)
+print("Phenotype Records inserted : ",phenoInserts)
+print("Plot Records Inserted:       ",plotInserts)
+print("Germplasm Records Inserted:  ", germplasmInserts)
 
 sys.exit()
 
