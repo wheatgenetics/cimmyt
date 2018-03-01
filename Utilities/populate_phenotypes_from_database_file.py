@@ -74,7 +74,7 @@ locations['OBR']='Obregon'
 locations['PUS']='Pusa'
 locations['TLC']='Toluca'
 
-
+# Read in the input spreadsheet (in xlsx format).
 data = get_data(inputFile)
 
 index = 0
@@ -145,6 +145,9 @@ for item in data[wksheet]:
 
     index+=1
 inputRecordCount=index
+
+# Open the database connections required (1 per table).
+
 print("")
 print("Connecting to Database...")
 
@@ -163,20 +166,8 @@ else:
     cursorB = cnx.cursor(buffered=True)
     cursorC = cnx.cursor(buffered=True)
 
-insert_phenotype = "INSERT INTO phenotypes (plot_id,iyear,ilocation,itrial,icondition,plot_no,trait_id,phenotype_value," \
-                   "phenotype_date,phenotype_person) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-
-phenoInserts=0
-for p in phenotypeList:
-    try:
-        phenoRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9])
-        cursorA.execute(insert_phenotype,phenoRow)
-        cnx.commit()
-        phenoInserts+=1
-    except mysql.connector.Error as err:
-        print(err)
-cursorA.close()
-
+# Insert the plot data - this must be done due to foreign key constraints on phenotypes table
+# Ignore rows with duplicate plot_id
 
 insert_plot = "INSERT INTO plots () VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 plotInserts=0
@@ -196,10 +187,25 @@ for p in plotList:
         else:
             print(err,plotInserts,p[20])
 
-
 cursorB.close()
 
+# Insert the phenotypes data
 
+insert_phenotype = "INSERT INTO phenotypes (plot_id,iyear,ilocation,itrial,icondition,plot_no,trait_id,phenotype_value," \
+                   "phenotype_date,phenotype_person) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+phenoInserts=0
+for p in phenotypeList:
+    try:
+        phenoRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9])
+        cursorA.execute(insert_phenotype,phenoRow)
+        cnx.commit()
+        phenoInserts+=1
+    except mysql.connector.Error as err:
+        print(err)
+cursorA.close()
+
+# Insert the germplasm data - ignore rows where gid is not present.
 
 insert_germplasm = "INSERT INTO germplasm () Values(%s,%s,%s,%s,%s)"
 germplasmInserts=0
