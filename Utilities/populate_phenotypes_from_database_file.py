@@ -31,6 +31,23 @@ wksheet=args.sheet
 phenotypeRecord = []
 phenotypeList = []
 
+plotRecord=[]
+plotList = []
+
+germplasmRecord = []
+germplasmList = []
+
+locations={}
+locations['BTN']='El Batan'
+locations['FAS']='Faisalabad'
+locations['JAM']='Jamalpur'
+locations['JBL']='Manegaon'
+locations['LDH']='Ludhiana'
+locations['NJR']='Njoro'
+locations['OBR']='Obregon'
+locations['PUS']='Pusa'
+locations['TLC']='Toluca'
+
 
 data = get_data(inputFile)
 
@@ -58,12 +75,13 @@ for item in data[wksheet]:
         entry = str(data[wksheet][index][16])
         dateStr=str(data[wksheet][index][17])
         if len(dateStr) > 0 and dateStr !='000000':
-            year='20'+ dateStr[0:2]
-            month = dateStr[2:4]
-            day = dateStr[4:6]
+            year=dateStr[0:4]
+            month = dateStr[5:7]
+            day = dateStr[8:10]
             phenoDate=year + '-' + month + '-' + day
         else:
             phenoDate=None
+
 
         phenoValue=data[wksheet][index][19]
         traitId=str(data[wksheet][index][18])
@@ -71,8 +89,26 @@ for item in data[wksheet]:
         phenotypeRecord=[plotId,iyear,ilocation,itrial,icondition,plot,traitId,phenoValue,phenoDate,phenoPerson]
         phenotypeList.append(phenotypeRecord)
 
-    index+=1
+        plantingDate=None
+        site=locations[ilocation]
+        pyear = '20' + str(iyear)
+        seedSource = origin
+        location=locations[ilocation]
+        cycle=None
+        conditions=None
+        col=None
+        row=None
+        purpose=None
+        tid=None
+        plotRecord=[plotId,iyear,ilocation,itrial,icondition,plot,trial,origin,plantingDate,site,pyear,location,cycle,
+                    conditions,rep,block,col,row,entry,purpose,gid,tid,occ]
+        plotList.append(plotRecord)
 
+        germplasmRecord=[gid,cid,sid,selectionHistory,crossName]
+        germplasmList.append(germplasmRecord)
+
+    index+=1
+inputRecordCount=index
 print("")
 print("Connecting to Database...")
 
@@ -88,18 +124,65 @@ except mysql.connector.Error as err:
         print(err)
 else:
     cursorA = cnx.cursor(buffered=True)
+    cursorB = cnx.cursor(buffered=True)
+    cursorC = cnx.cursor(buffered=True)
 
-insert_phenotype = "INSERT INTO phenotypes (plot_id,iyear,ilocation,itrial,icondition,plot_no,trait_id,phenotype_value,phenotype_date,phenotype_person) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+insert_phenotype = "INSERT INTO phenotypes (plot_id,iyear,ilocation,itrial,icondition,plot_no,trait_id,phenotype_value," \
+                   "phenotype_date,phenotype_person) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 phenoInserts=0
 for p in phenotypeList:
-    phenoRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9])
-    print(phenoInserts,phenoRow)
-    cursorA.execute(insert_phenotype,phenoRow)
-    cnx.commit()
-    phenoInserts+=1
+    try:
+        phenoRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9])
+        cursorA.execute(insert_phenotype,phenoRow)
+        cnx.commit()
+        phenoInserts+=1
+    except mysql.connector.Error as err:
+        print(err)
 cursorA.close()
 
+
+insert_plot = "INSERT INTO plots () VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+plotInserts=0
+
+for p in plotList:
+    try:
+        plotRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11],p[12],p[13],p[14],p[15],p[16],p[17],p[18],
+                 p[19],p[20],p[21],p[22])
+        cursorB.execute(insert_plot,plotRow)
+        cnx.commit()
+        plotInserts+=1
+    except mysql.connector.Error as err:
+        if err.errno==errorcode.ER_DUP_ENTRY:
+            continue
+        else:
+            print(err,plotInserts,p[20])
+
+
+cursorB.close()
+
+
+
+insert_germplasm = "INSERT INTO germplasm () Values(%s,%s,%s,%s,%s)"
+germplasmInserts=0
+for g in germplasmList:
+    try:
+        germplasmRow=(g[0],g[1],g[2],g[3],g[4])
+        cursorC.execute(insert_germplasm,germplasmRow)
+        cnx.commit()
+        germplasmInserts+=1
+    except mysql.connector.Error as err:
+        if err.errno==errorcode.ER_DUP_ENTRY:
+            continue
+        else:
+            print(err,germplasmInserts,g[0])
+
+
+
+print("Input Records processed: ",inputRecordCount)
+print("Phenotye Records inserted : ",phenoInserts)
+print("Plot Records Inserted: ",plotInserts)
+print("Germplasm Records Inserted: ", germplasmInserts)
 
 sys.exit()
 

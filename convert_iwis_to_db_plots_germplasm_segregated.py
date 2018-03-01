@@ -143,7 +143,7 @@ for item in data['Sheet1']:
         #germplasmDict[gid]=[gid,cid,sid,selectionHistory,crossName]
 
     index+=1
-
+    
 # Connect to database and return two cursors: One for insert into the plots table and
 # one for insert into germplasm table
 
