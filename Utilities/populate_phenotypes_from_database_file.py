@@ -6,7 +6,7 @@
 #
 # Program to load CIMMYT phenotypes table from CIMMYT database file.
 #
-# Assumed order of columns in input file:
+# Order of columns in input file type A:
 # 0 plot_id
 # 1 iyear
 # 2 ilocation
@@ -28,7 +28,23 @@
 # 18 trait_id
 # 19 phenotype_value
 #
-# N.B. Check order of columns in input file as it is not consistently the same!!
+# Order of columns in input file type B:
+# 0 plot_id
+# 1 iyear
+# 2 ilocation
+# 3 itrial
+# 4 icondition
+# 5 cid
+# 6 sid
+# 7 gid
+# 8 cross_name
+# 9 selection_history
+# 10 entry
+# 11 plot
+# 12 rep
+# 13 phenotype_date
+# 14 trait_id
+# 15 phenotype_value
 #
 #
 # TO DO Add a file_format command line parameter to cater for different file layouts, then support different mappings.
@@ -48,11 +64,19 @@ cmdline = argparse.ArgumentParser()
 
 cmdline.add_argument('-f', '--file', help='Full Path to CIMMYT database input file to import')
 cmdline.add_argument('-s', '--sheet', help='Name of Excel Worksheet to Load')
+cmdline.add_argument('-l', '--layout', help='Layout of input file, i.e. column order')
 
 args = cmdline.parse_args()
 
 inputFile = args.file
+print('')
+print("Loading input file: ", inputFile)
+
 wksheet=args.sheet
+print ("Processing Worksheet: ",wksheet)
+print('')
+
+fileType=args.layout
 
 phenotypeRecord = []
 phenotypeList = []
@@ -77,79 +101,151 @@ locations['TLC']='Toluca'
 # Read in the input spreadsheet (in xlsx format).
 data = get_data(inputFile)
 
-index = 0
-for item in data[wksheet]:
-    if index == 0:
-        pass
-    elif index > 0:
-        plotId=data[wksheet][index][0]
-        iyear=data[wksheet][index][1]
-        ilocation=data[wksheet][index][2]
-        itrial=data[wksheet][index][3]
-        icondition=data[wksheet][index][4]
-        occ =data[wksheet][index][5]
-        trial=data[wksheet][index][6]
-        cid=data[wksheet][index][7]
-        if cid =='':
-            cid=None
-        sid = data[wksheet][index][8]
-        if sid == '':
-            sid = None
-        gid = data[wksheet][index][9]
-        if gid == '':
-            gid = None
-        crossName= data[wksheet][index][10]
-        selectionHistory = data[wksheet][index][11]
-        if selectionHistory == '':
-            selectionHistory=None
-        origin = data[wksheet][index][12]
-        if origin == '':
-            origin=None
-        plot = str(data[wksheet][index][13])
-        rep = str(data[wksheet][index][14])
-        block = str(data[wksheet][index][15])
-        entry = str(data[wksheet][index][16])
-        dateStr=str(data[wksheet][index][17])
-        if len(dateStr) > 0 and dateStr !='000000':
-            year=dateStr[0:4]
-            month = dateStr[5:7]
-            day = dateStr[8:10]
-            phenoDate=year + '-' + month + '-' + day
-        else:
-            phenoDate=None
+# Process data for input file of type A - See note above
+if fileType=='A':
+    index = 0
+    for item in data[wksheet]:
+        if index == 0:
+            pass
+        elif index > 0:
+            plotId=data[wksheet][index][0]
+            iyear=data[wksheet][index][1]
+            ilocation=data[wksheet][index][2]
+            itrial=data[wksheet][index][3]
+            icondition=data[wksheet][index][4]
+            occ =data[wksheet][index][5]
+            trial=data[wksheet][index][6]
+            cid=data[wksheet][index][7]
+            if cid =='':
+                cid=None
+            sid = data[wksheet][index][8]
+            if sid == '':
+                sid = None
+            gid = data[wksheet][index][9]
+            if gid == '':
+                gid = None
+            crossName= data[wksheet][index][10]
+            selectionHistory = data[wksheet][index][11]
+            if selectionHistory == '':
+                selectionHistory=None
+            origin = data[wksheet][index][12]
+            if origin == '':
+                origin=None
+            plot = str(data[wksheet][index][13])
+            rep = str(data[wksheet][index][14])
+            block = str(data[wksheet][index][15])
+            dateStr=str(data[wksheet][index][17])
+            if len(dateStr) > 0 and dateStr !='000000':
+                year=dateStr[0:4]
+                day = dateStr[5:7]
+                month = dateStr[8:10]
+                phenoDate=year + '-' + month + '-' + day
+            else:
+                phenoDate=None
 
 
-        phenoValue=data[wksheet][index][19]
-        traitId=str(data[wksheet][index][18])
-        phenoPerson=None
-        phenotypeRecord=[plotId,iyear,ilocation,itrial,icondition,plot,traitId,phenoValue,phenoDate,phenoPerson]
-        phenotypeList.append(phenotypeRecord)
+            phenoValue=data[wksheet][index][19]
+            traitId=str(data[wksheet][index][18])
+            phenoPerson=None
+            phenotypeRecord=[plotId,iyear,ilocation,itrial,icondition,plot,traitId,phenoValue,phenoDate,phenoPerson]
+            phenotypeList.append(phenotypeRecord)
 
-        plantingDate=None
-        site=locations[ilocation]
-        pyear = '20' + str(iyear)
-        seedSource = origin
-        location=locations[ilocation]
-        cycle=None
-        conditions=None
-        col=None
-        row=None
-        purpose=None
-        tid=None
-        plotRecord=[plotId,iyear,ilocation,itrial,icondition,plot,trial,origin,plantingDate,site,pyear,location,cycle,
-                    conditions,rep,block,col,row,entry,purpose,gid,tid,occ]
-        plotList.append(plotRecord)
+            plantingDate=None
+            site=locations[ilocation]
+            pyear = '20' + str(iyear)
+            seedSource = origin
+            location=locations[ilocation]
+            cycle=None
+            conditions=None
+            col=None
+            row=None
+            purpose=None
+            tid=None
+            plotRecord=[plotId,iyear,ilocation,itrial,icondition,plot,trial,origin,plantingDate,site,pyear,location,cycle,
+                        conditions,rep,block,col,row,entry,purpose,gid,tid,occ]
+            plotList.append(plotRecord)
 
-        germplasmRecord=[gid,cid,sid,selectionHistory,crossName]
-        germplasmList.append(germplasmRecord)
+            germplasmRecord=[gid,cid,sid,selectionHistory,crossName]
+            germplasmList.append(germplasmRecord)
 
-    index+=1
+        index+=1
+elif fileType=='B':
+    index = 0
+    for item in data[wksheet]:
+        if index == 0:
+            pass
+        elif index > 0:
+            plotId = data[wksheet][index][0]
+            iyear = data[wksheet][index][1]
+            ilocation = data[wksheet][index][2]
+            itrial = data[wksheet][index][3]
+            icondition = data[wksheet][index][4]
+            occ = None
+            trial = None
+            cid = data[wksheet][index][5]
+            if cid == '':
+                cid = None
+            sid = data[wksheet][index][6]
+            if sid == '':
+                sid = None
+            gid = data[wksheet][index][7]
+            if gid == '':
+                gid = None
+            crossName = data[wksheet][index][8]
+            selectionHistory = data[wksheet][index][9]
+            if selectionHistory == '':
+                selectionHistory = None
+            origin = None
+            entry = str(data[wksheet][index][10])
+            plot = str(data[wksheet][index][11])
+            rep = str(data[wksheet][index][12])
+            block = None
+            phenoValue = data[wksheet][index][13]
+            traitId = str(data[wksheet][index][14])
+            dateStr = str(data[wksheet][index][15])
+            if len(dateStr) > 0 and dateStr != '000000':
+                year = dateStr[0:4]
+                day = dateStr[5:7]
+                month = dateStr[8:10]
+                phenoDate = year + '-' + month + '-' + day
+            else:
+                phenoDate = None
+
+            phenoPerson = None
+            phenotypeRecord = [plotId, iyear, ilocation, itrial, icondition, plot, traitId, phenoValue, phenoDate,
+                               phenoPerson]
+            phenotypeList.append(phenotypeRecord)
+
+            plantingDate = None
+            site = locations[ilocation]
+            pyear = '20' + str(iyear)
+            seedSource = origin
+            location = locations[ilocation]
+            cycle = None
+            conditions = None
+            col = None
+            row = None
+            purpose = None
+            tid = None
+            plotRecord = [plotId, iyear, ilocation, itrial, icondition, plot, trial, origin, plantingDate, site, pyear,
+                          location, cycle,
+                          conditions, rep, block, col, row, entry, purpose, gid, tid, occ]
+            plotList.append(plotRecord)
+
+            germplasmRecord = [gid, cid, sid, selectionHistory, crossName]
+            germplasmList.append(germplasmRecord)
+
+        index += 1
+else:
+    print("Unknown File Type...exiting")
+    sys.exit()
+
 inputRecordCount=index
 
 # Open the database connections required (1 per table).
 
 print("")
-print("Connecting to Database...")
+print("Connecting to Database...",test_config.DATABASE)
 
 try:
     cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD, host=test_config.HOST,
