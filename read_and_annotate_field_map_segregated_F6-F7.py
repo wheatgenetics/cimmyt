@@ -160,6 +160,7 @@ for row in range(numRows):
         #if (column >= plotColOffset and column <= numCols - 1) and (row <= numRows - 2) and isPlotNumber: # For F5I
         if (column >= plotColOffset and column <= numCols - 1) and (row <= numRows) and isPlotNumber:
             fullPlotId = plotPrefix + cellValue
+            print(fullPlotId)
             #mapPlotRow = str(columnList[column - plotColOffset])
             #mapPlotCol = str(rowList[row])
             mapPlotCol = str(columnList[column - plotColOffset])

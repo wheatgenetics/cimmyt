@@ -5,6 +5,8 @@
 # Version: 0.2 October 25,2017 Eliminated duplicate gid in germplasm data records in IWIS files by using Dictionary
 # Version: 0.3 February 13,2018 Created new version to hand different IWIS for Segregated populations F6-F7
 #
+# N.B.Loading of germplasm table is disabled since all fields required are not in the inout file e.g. selection_history.
+#
 # This program will take a CIMMYT IWIS Excel .xls export file that contains plot and germplasm data in each row and populates
 # the plot and germplasm tables in the CIMMYT database.
 #
@@ -35,7 +37,7 @@
 #
 # If any error occurs while attempting to insert into plots table, an exception will be thrown and the program exited.
 #
-# If any error occurs while attempting to insert into germplams table, an exception will be thrown and the program
+# If any error occurs while attempting to insert into germplasm table, an exception will be thrown and the program
 # exited. However, note that the insert statement used to insert into the germplasm table allows duplicate key errors
 # to be ignored.
 #
@@ -183,7 +185,9 @@ try:
         plotRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11],p[12],p[13],p[14],p[15],p[16],p[17],p[18],p[19],p[20],p[21],p[22])
         cursorA.execute(insert_plot,plotRow)
         plotInserts+=1
-    cnx.commit()
+        cnx.commit()
+        print(p[0])
+    #cnx.commit()
     cursorA.close()
     cursorC.execute(count_plots,)
     endPlotCount = cursorC.rowcount
@@ -200,34 +204,35 @@ except mysql.connector.Error as err:
     sys.exit()
 
 # Insert data into germplasm table. Exit if any error occurs, only commit changes when all updates are made.
-# Note that INSERT IGNORE allows duplicate key errors to be ignored and processing to continue
+# Note that INSERT IGNORE allows duplicate key errors to be ignored and processing to continue.
+# INSERT IGNORE does not change any rows that exist with a duplicate key.
 
-#count_germplasm = "SELECT * FROM germplasm"
-#insert_germplasm = "INSERT IGNORE INTO germplasm (gid,cid,sid,selection_history,cross_name) VALUES (%s,%s,%s,%s,%s)"
+count_germplasm = "SELECT * FROM germplasm"
+insert_germplasm = "INSERT IGNORE INTO germplasm (gid,cid,sid,selection_history,cross_name) VALUES (%s,%s,%s,%s,%s)"
 
-#try:
-#    print("Inserting data into germplasm table...")
-#    cursorD.execute(count_germplasm, )
-#    startGermplasmCount=cursorD.rowcount
-#    germplasmInserts=0
-#    for plotId,g in germplasmDict.items():
-#        germplasmRow=(g[0],g[1],g[2],g[3],g[4])
-#        cursorB.execute(insert_germplasm,germplasmRow)
-#        germplasmInserts+=1
-#    cnx.commit()
-#    cursorB.close()
-#    cursorD.execute(count_germplasm, )
-#    endGermplasmCount = cursorD.rowcount
-#    print("Germplasm Records Processed :" + str(germplasmInserts))
-#    print("Unique Germplasm Records Inserted: " + str(endGermplasmCount - startGermplasmCount))
-#    cursorD.close()
-#except mysql.connector.Error as err:
-#    print()
-#    print('An error occurred while attempting to insert data into CIMMYT database germplasm table. Exiting...')
-#    print(err)
-#    print('**************************************************************************************************')
-#    print()
-#    sys.exit()
+try:
+    print("Inserting data into germplasm table...")
+    cursorD.execute(count_germplasm, )
+    startGermplasmCount=cursorD.rowcount
+    germplasmInserts=0
+    for plotId,g in germplasmDict.items():
+        germplasmRow=(g[0],g[1],g[2],g[3],g[4])
+        cursorB.execute(insert_germplasm,germplasmRow)
+        germplasmInserts+=1
+    cnx.commit()
+    cursorB.close()
+    cursorD.execute(count_germplasm, )
+    endGermplasmCount = cursorD.rowcount
+    print("Germplasm Records Processed :" + str(germplasmInserts))
+    print("Unique Germplasm Records Inserted: " + str(endGermplasmCount - startGermplasmCount))
+    cursorD.close()
+except mysql.connector.Error as err:
+    print()
+    print('An error occurred while attempting to insert data into CIMMYT database germplasm table. Exiting...')
+    print(err)
+    print('**************************************************************************************************')
+    print()
+    sys.exit()
 
 print()
 print("Program executed successfully. Exiting...")
