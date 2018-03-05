@@ -55,7 +55,7 @@ from pyexcel_xlsx import get_data
 import sys
 import mysql.connector
 from mysql.connector import errorcode
-import test_config
+import config
 import argparse
 
 # Get command line input.
@@ -247,11 +247,11 @@ inputRecordCount=index
 # Open the database connections required (1 per table).
 
 print("")
-print("Connecting to Database...",test_config.DATABASE)
+print("Connecting to Database...",config.DATABASE)
 
 try:
-    cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD, host=test_config.HOST,
-                                      port=test_config.PORT,database=test_config.DATABASE)
+    cnx = mysql.connector.connect(user=config.USER, password=config.PASSWORD, host=config.HOST,
+                                      port=config.PORT,database=config.DATABASE)
 except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
         print("Something is wrong with your user name or password")
