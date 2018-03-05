@@ -47,7 +47,7 @@
 # 15 phenotype_value
 #
 #
-# TO DO Add a file_format command line parameter to cater for different file layouts, then support different mappings.
+# CAUTION: Check data format on phenotype_date column before import as the format varies from file to file!!!
 #
 #
 
