@@ -55,7 +55,7 @@ from pyexcel_xlsx import get_data
 import sys
 import mysql.connector
 from mysql.connector import errorcode
-import test_config
+import config
 import argparse
 
 # Get command line input.
@@ -134,6 +134,7 @@ if fileType=='A':
             plot = str(data[wksheet][index][13])
             rep = str(data[wksheet][index][14])
             block = str(data[wksheet][index][15])
+            entry = str(data[wksheet][index][16])
             dateStr=str(data[wksheet][index][17])
             if len(dateStr) > 0 and dateStr !='000000':
                 year=dateStr[0:4]
@@ -200,6 +201,7 @@ elif fileType=='B':
             plot = str(data[wksheet][index][11])
             rep = str(data[wksheet][index][12])
             block = None
+            entry = None
             phenoValue = data[wksheet][index][13]
             traitId = str(data[wksheet][index][14])
             dateStr = str(data[wksheet][index][15])
@@ -245,11 +247,11 @@ inputRecordCount=index
 # Open the database connections required (1 per table).
 
 print("")
-print("Connecting to Database...",test_config.DATABASE)
+print("Connecting to Database...",config.DATABASE)
 
 try:
-    cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD, host=test_config.HOST,
-                                      port=test_config.PORT,database=test_config.DATABASE)
+    cnx = mysql.connector.connect(user=config.USER, password=config.PASSWORD, host=config.HOST,
+                                      port=config.PORT,database=config.DATABASE)
 except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
         print("Something is wrong with your user name or password")
@@ -265,7 +267,9 @@ else:
 # Insert the plot data - this must be done due to foreign key constraints on phenotypes table
 # Ignore rows with duplicate plot_id
 
-insert_plot = "INSERT INTO plots () VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+insert_plot = "INSERT INTO plots (plot_id,iyear,ilocation,itrial,icondition,plot_no,trial,seed_source,planting_date,site,year," \
+              "location,cycle,conditions,rep,block,col,row,entry,purpose,gid,tid,occ) " \
+              "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 plotInserts=0
 
 print("")
