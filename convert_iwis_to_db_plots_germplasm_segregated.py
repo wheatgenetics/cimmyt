@@ -91,6 +91,9 @@ site = 'CENEB-810'
 col = None
 row = None
 block=None
+subblock=None
+selectionHistory=None
+origin=None
 
 # Read in the data from the Excel IWIS file
 
@@ -133,16 +136,13 @@ for item in data['Sheet1']:
         sid = data['Sheet1'][index][2]
         gid = data['Sheet1'][index][3]
         crossName= data['Sheet1'][index][4]
-        #selectionHistory = data['Sheet1'][index][4]
-        #origin = data['Sheet1'][index][5]
         plot = str(data['Sheet1'][index][5])
         rep = str(data['Sheet1'][index][6])
-        #block = str(data['Sheet1'][index][8])
         entry = str(data['Sheet1'][index][0])
 
         plotId=iyear + '-' + ilocation + '-' + itrial + '-' + icondition + '-' + plot
-        plotDict[plotId]=[plotId,iyear,ilocation,itrial,icondition,plot,trial,seedSource,plantingDate,site,year,location,cycle,condition,rep,block,col,row,entry,purpose,gid,tid,occ]
-        #germplasmDict[gid]=[gid,cid,sid,selectionHistory,crossName]
+        plotDict[plotId]=[plotId,iyear,ilocation,itrial,icondition,plot,trial,seedSource,plantingDate,site,year,location,cycle,condition,rep,block,subblock,col,row,entry,purpose,gid,tid,occ]
+        germplasmDict[gid]=[gid,cid,sid,selectionHistory,crossName]
 
     index+=1
     
@@ -174,7 +174,7 @@ else:
 # Insert data into plots table. Exit if any error occurs, only commit changes when all updates are made.
 
 count_plots = "SELECT * from plots"
-insert_plot = "INSERT INTO plots (plot_id,iyear,ilocation,itrial,icondition,plot_no,trial,seed_source,planting_date,site,year,location,cycle,conditions,rep,block,col,row,entry,purpose,gid,tid,occ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+insert_plot = "INSERT INTO plots (plot_id,iyear,ilocation,itrial,icondition,plot_no,trial,seed_source,planting_date,site,year,location,cycle,conditions,rep,block,subblock,col,row,entry,purpose,gid,tid,occ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 try:
     print("Inserting data into plots table...")
@@ -182,7 +182,7 @@ try:
     startPlotCount=cursorC.rowcount
     plotInserts=0
     for plotId,p in plotDict.items():
-        plotRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11],p[12],p[13],p[14],p[15],p[16],p[17],p[18],p[19],p[20],p[21],p[22])
+        plotRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11],p[12],p[13],p[14],p[15],p[16],p[17],p[18],p[19],p[20],p[21],p[22],p[23])
         cursorA.execute(insert_plot,plotRow)
         plotInserts+=1
         cnx.commit()
