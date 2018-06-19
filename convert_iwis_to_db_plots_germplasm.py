@@ -112,6 +112,9 @@ for item in data['Sheet1']:
             itrial = data['Sheet1'][index][1].split('BW')[0]+'BW'
             if itrial=='YTBW':
                 condition='B5IR'
+            elif itrial=='AEYTBW':
+                itrial='AYT'
+                condition='BLHT'
             else:
                 condition = data['Sheet1'][index][1].split('BW')[1].split('_')[0]
             icondition = iconditions[condition]
@@ -119,14 +122,30 @@ for item in data['Sheet1']:
             itrial = data['Sheet1'][index][1].split('HP')[0] + 'HP'
             condition = data['Sheet1'][index][1].split('HP')[1].split('_')[0]
             icondition=iconditions[condition]
+        elif '25TH HIGH RAINFALL' in trial:
+            itrial = 'HRWYT' # Special Case 25TH High Rainfall YT
+            condition='B5IR'
+            icondition=iconditions[condition]
+        elif 'MAPPING POP CALOR' in trial:
+            itrial = 'AYT'  # Special Case Heat Trial
+            condition = 'BLHT'
+            icondition = iconditions[condition]
+        elif 'AYT' in trial:
+            itrial = 'AYT'  # Special Case Heat Trial
+            condition = 'BLHT'
+            icondition = iconditions[condition]
         print('itrial:',itrial)
         print('trial:',trial)
         print('icondition:',icondition)
         print('conditions:',condition)
     elif index == 4:
-        iyear = data['Sheet1'][index][1].split('-')[1]
-        year = '20'+iyear
         cycle = data['Sheet1'][index][1]
+        if 'INT' in cycle: # Special Case 25TH High Rainfall YT
+            year = cycle[3:7]
+            iyear= cycle[5:7]
+        else:
+            iyear = data['Sheet1'][index][1].split('-')[1]
+            year = '20'+iyear
         print('iyear:',iyear)
         print('year',year)
         print('cycle',cycle)
@@ -153,8 +172,6 @@ for item in data['Sheet1']:
 
 # Connect to database and return two cursors: One for insert into the plots table and
 # one for insert into germplasm table
-
-
 try:
     cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD, host=test_config.HOST,
                                       port=test_config.PORT,database=test_config.DATABASE)

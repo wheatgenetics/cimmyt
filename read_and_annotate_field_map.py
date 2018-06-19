@@ -144,6 +144,7 @@ for row in range(numRows-1):
     rowList.append(fieldMap.iloc[row:row + 1].values[0,0])
 
 # Write the rest of rows of the workbook
+print('Writing field map spreadsheet')
 for row in range(numRows):
    for column in range(numCols):
        cellValue=str(fieldMap.iloc[row:row + 1, column:column + 1].values[0,0])
@@ -156,6 +157,7 @@ for row in range(numRows):
             mapPlotRow = str(rowList[row])
             mapPlot='R:'+ mapPlotRow +' C:'+  mapPlotCol + ' ' + fullPlotId
             worksheet.write_string(row+1,column,mapPlot, format)
+            print('Updating plot '+ fullPlotId)
             cursorA.execute(updatePlot, (int(mapPlotRow),int(mapPlotCol),fullPlotId))
             cnxA.commit()
        elif cellValue!='nan':
@@ -172,4 +174,5 @@ workbook.close()
 
 close_db_connection(cursorA,cnxA)
 
-sys.exit()
+print('Completed')
+#sys.exit()
