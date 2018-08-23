@@ -3,6 +3,11 @@
 # Program: read_plot_shapefile.py
 #
 # Version: 0.1 August 7,2018 Initial Version
+#
+# INPUT: Path to shapefile to be read into database
+#
+# OUTPUT: Database plot_map table populated with plots found in shape file.
+#
 
 import fiona
 
@@ -64,10 +69,19 @@ cmdline.add_argument('-i','--input',help='Shapefile to import...')
 args=cmdline.parse_args()
 inputFile=args.input
 
+# Query to populate the plot_map table in the CIMMYT database
+
 plotMapInsert = "INSERT INTO plot_map_test (plot_id,plot_polygon) VALUES(%s,ST_PolygonFromText(%s))"
+
+# Open database connection
+
 cursorA, cnxA = open_db_connection(test_config)
+
+
+# Read the shape file and update database with plot coordinates
 plotInserts=0
 with fiona.open(inputFile) as plot:
+    print(plot.schema)
     for feat in plot:
         plotId=feat['properties']['Plot_ID']
         plotGeometry=feat['geometry']
@@ -78,11 +92,14 @@ with fiona.open(inputFile) as plot:
         plotMapPolygon=dumps(plotShape.convex_hull)
         plotMapRow=(plotId,plotMapPolygon)
         try:
-            cursorA.execute(plotMapInsert, plotMapRow)
+            #cursorA.execute(plotMapInsert, plotMapRow)
             plotInserts+=1
             print()
         except Exception as e:
             print("Error occurred while attempting to insert plot into database:",e)
+
+
+
 commit_and_close_db_connection(cursorA, cnxA)
 sys.exit()
 
