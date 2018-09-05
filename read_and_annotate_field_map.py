@@ -13,6 +13,10 @@
 #
 # Note Row and Column Indices in xlsxWriter are zero based.
 #
+# References:
+#   1. pandas: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_excel.html
+#   2. Xlsxwriter: https://xlsxwriter.readthedocs.io
+#
 #
 
 import pandas as pd
@@ -109,8 +113,8 @@ c=range(numCols)
 print('Rows:',r)
 print('Columns:',c)
 
-plotColOffset=2
-plotRowOffset=0
+plotColOffset=2 # Indicates offset from first column in spreadsheet to the first column where data is present.
+plotRowOffset=0 # Indicates offset from first row in spreadsheet to first row where data is present.
 
 # Connect to database - Create one cursor per query
 
@@ -118,8 +122,6 @@ print("")
 print("Connecting to Database...")
 cursorA,cnxA=open_db_connection(test_config)
 updatePlot='UPDATE plots SET row=%s,col=%s WHERE plot_id = %s'
-#selectPlot='SELECT * FROM plots WHERE plot_id LIKE %s'
-#cursorA.execute(selectPlot, (plotId,))
 
 # Open .xlsx output file and set up worksheet formatting
 workbook = xlsxwriter.Workbook(fieldMapOutFile)
@@ -130,6 +132,10 @@ worksheet.set_column(18,18, 15.0)
 format.set_border()
 
 # Write the header row for the workbook and get the list of column subscripts
+# fieldmap.axes[1] is the list of column labels for the fieldmap (including unlabelled columns '' or Unnamed).
+# write_number parameters: (row, col, number [, cell_format ])
+# write_string parameters: (row, col, string [, cell_format ])
+
 columnList=[]
 for column in range(numCols):
     if str(fieldMap.axes[1][column]).isdigit():
@@ -138,12 +144,15 @@ for column in range(numCols):
     else:
         worksheet.write_string(0, column, '', format)
 
-# Get the list of row subscripts
+# Get the list of row subscripts for the input fieldmap
 rowList=[]
 for row in range(numRows-1):
     rowList.append(fieldMap.iloc[row:row + 1].values[0,0])
 
 # Write the rest of rows of the workbook
+# plotColOffset identifies the first spreadsheet column that contains a plot number
+# numCols -1 identifies the last spreadsheet column that contains a plot number
+# rows-2 is the last spreadsheet row that contains a plot number
 print('Writing field map spreadsheet')
 for row in range(numRows):
    for column in range(numCols):
@@ -151,8 +160,6 @@ for row in range(numRows):
        isPlotNumber=cellValue.isdigit()
        if (column >=plotColOffset and column <=numCols-1) and (row<=numRows-2) and isPlotNumber:
             fullPlotId=plotPrefix+cellValue
-            #mapPlotRow=str(columnList[column-plotColOffset])
-            #mapPlotCol=str(rowList[row])
             mapPlotCol = str(columnList[column - plotColOffset])
             mapPlotRow = str(rowList[row])
             mapPlot='R:'+ mapPlotRow +' C:'+  mapPlotCol + ' ' + fullPlotId
@@ -161,8 +168,10 @@ for row in range(numRows):
             cursorA.execute(updatePlot, (int(mapPlotRow),int(mapPlotCol),fullPlotId))
             cnxA.commit()
        elif cellValue!='nan':
+           # Write any values that are not plot numbers i.e. RELLENO column values
            worksheet.write_string(row+1,column,cellValue,format)
        else:
+           # Otherwise, just write out an empty cell.
            worksheet.write_string(row+1, column, '', format)
 
 worksheet.set_landscape()
@@ -175,4 +184,3 @@ workbook.close()
 close_db_connection(cursorA,cnxA)
 
 print('Completed')
-#sys.exit()
