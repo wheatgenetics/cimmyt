@@ -63,6 +63,7 @@ traits['DAYSMT'] = 'DAYSMT'
 traits['GRYLD'] = 'GRYLD'
 traits['Agrscr'] = 'AgrScr'
 traits['PH'] = 'PH'
+traits['NOTES']='NOTES'
 
 # Get command line input.
 
