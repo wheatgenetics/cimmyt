@@ -68,16 +68,18 @@ traits['NOTES']='NOTES'
 # Get command line input.
 
 cmdline = argparse.ArgumentParser()
-cmdline.add_argument('-p','--pfile',help='The full path to the file containing the phenotype data.')
+cmdline.add_argument('-p','--pfile',help='The full path to the spreadsheet containing the phenotype data.')
+cmdline.add_argument('-s','--sheet',help='The worksheet in the spreadsheet to be processing')
 
 # Assign variables to command line arguments
 
 args=cmdline.parse_args()
 
 inFile=args.pfile
+worksheet=args.sheet
 
 print()
-print('Processing field map input file: '+ inFile)
+print('Processing field map input file: '+ inFile + ' Worksheet: ' + worksheet)
 
 # Connect to database - Create one cursor per query
 
@@ -90,7 +92,7 @@ insert_phenotypes = "INSERT INTO phenotypes (plot_id,iyear,ilocation,itrial,icon
 
 # Read in the field map input file and determine the dimensions of the field map
 
-phenotypeData = pd.read_excel(inFile)
+phenotypeData = pd.read_excel(inFile,sheet_name=worksheet)
 
 for r in phenotypeData.T:
     plotId=phenotypeData.T[r].plot_id
@@ -109,6 +111,11 @@ for r in phenotypeData.T:
                 phenotypeRow=(plotId, pYear, pLocation, pTrial, pCondition, plotNo, traitId, phenotypeValue)
                 print(phenotypeRow)
                 cursorA.execute(insert_phenotypes,phenotypeRow)
+            elif pd.isnull(phenotypeData.T[r][colId]):
+                phenotypeValue='NA'
+                phenotypeRow = (plotId, pYear, pLocation, pTrial, pCondition, plotNo, traitId, phenotypeValue)
+                print(phenotypeRow)
+                cursorA.execute(insert_phenotypes, phenotypeRow)
         colId+= 1
     cnxA.commit()
 cursorA.close()
