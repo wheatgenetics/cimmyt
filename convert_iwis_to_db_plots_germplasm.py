@@ -113,8 +113,10 @@ for item in data['Sheet1']:
             if itrial=='YTBW':
                 condition='B5IR'
             elif itrial=='AEYTBW':
-                itrial='AYT'
-                condition='BLHT'
+                #itrial='AYT'
+                #condition='BLHT'
+                condition=data['Sheet1'][index][1][6:10]
+                pass
             else:
                 condition = data['Sheet1'][index][1].split('BW')[1].split('_')[0]
             icondition = iconditions[condition]
@@ -196,7 +198,7 @@ else:
 # Insert data into plots table. Exit if any error occurs, only commit changes when all updates are made.
 
 count_plots = "SELECT * from plots"
-insert_plot = "INSERT INTO plots (plot_id,iyear,ilocation,itrial,icondition,plot_no,trial,seed_source,planting_date,site,year,location,cycle,conditions,rep,block,subblock,col,row,entry,purpose,gid,tid,occ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+insert_plot = "INSERT IGNORE INTO plots (plot_id,iyear,ilocation,itrial,icondition,plot_no,trial,seed_source,planting_date,site,year,location,cycle,conditions,rep,block,subblock,col,row,entry,purpose,gid,tid,occ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 try:
     print("Inserting data into plots table...")
