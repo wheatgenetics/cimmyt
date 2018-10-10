@@ -12,19 +12,19 @@ import pandas as pd
 
 import mysql.connector
 from mysql.connector import errorcode
-import test_config
+import config
 
 import sys
 import os
 import argparse
 
-def open_db_connection(test_config):
+def open_db_connection(config):
 
     # Connect to the HTP database
         try:
-            cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD,
-                                          host=test_config.HOST, port=test_config.PORT,
-                                          database=test_config.DATABASE)
+            cnx = mysql.connector.connect(user=config.USER, password=config.PASSWORD,
+                                          host=config.HOST, port=config.PORT,
+                                          database=config.DATABASE)
             print('Connecting to Database: ' + cnx.database)
 
         except mysql.connector.Error as err:
@@ -64,6 +64,9 @@ traits['GRYLD'] = 'GRYLD'
 traits['Agrscr'] = 'AgrScr'
 traits['PH'] = 'PH'
 traits['NOTES']='NOTES'
+traits['TGW']='TGW'
+traits['LODG_0_10']='LODG_0_10'
+
 
 # Get command line input.
 
@@ -85,7 +88,7 @@ print('Processing field map input file: '+ inFile + ' Worksheet: ' + worksheet)
 
 print("")
 print("Connecting to Database...")
-cursorA,cnxA=open_db_connection(test_config)
+cursorA,cnxA=open_db_connection(config)
 insert_phenotypes = "INSERT INTO phenotypes (plot_id,iyear,ilocation,itrial,icondition,plot_no,trait_id,phenotype_value)" \
                    " VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
 
