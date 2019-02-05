@@ -62,6 +62,44 @@ Note that there are some variants of this program that handle slightly different
 
 convert_iwis_to_db_plots_germplasm_segregated.py
 
+This version will handle a different IWIS format for segregated populations F6-F7
+
+N.B.Loading of germplasm table is disabled since all fields required are not in the input file e.g. selection_history.
+
+The Excel file structure is as follows:
+
+Row 1 Col 1: 'TID'        Row 1 Col 2: <tid value>
+
+Row 2 Col 1: 'OCC'        Row 2 Col 2: <occ value>
+
+Row 3 Col 1: 'Trial Name' Row 3 Col 2: <trial name value>
+
+Row 4 Col 1: 'Trial Abbr' Row 4 Col 2: <trial abbreviation value>
+
+Row 5 Col 1: 'Cycle'      Row 5 Col 2: <cycle value>
+
+Row 6 Col 1: 'Program'    Row 6 Col 2; <program value>
+
+Row 7 Blank
+
+Row 8 Column Headings for plot and germplasm data columns
+
+  Column 0: Entry
+
+  Column 1: CID
+
+  Column 2: SID
+
+  Column 3: GID
+
+  Column 4: Cross Name
+
+  Column 5: Plot
+
+  Column 8: Rep
+
+Row 9 to EOF: plot and germplasm data values
+
 convert_iwis_to_db_germplasm_segregated.py
 
 convert_iwis_to_db_plots_germplasm_south_asia.py
@@ -79,6 +117,6 @@ New plots found in the IWIS file will be inserted into the database table cimmyt
 
 New germplasm data found in the IWIS file will be inserted into the database table cimmyt.germplasm
 
-### generate_mexico_fieldbook_files_from_database
+##generate_mexico_fieldbook_files_from_database
 
 ### read_and_annotate_field_map
