@@ -4,7 +4,7 @@ Tools for CIMMYT Data Automation
 
 This program will take a CIMMYT IWIS Excel .xls export file that contains plot and germplasm data in each row and populates
 the plot and germplasm tables in the CIMMYT database.
-#
+
 Note that multiple rows can occur for each GID in the IWIS file due to the fact that there are replicated plots
 which will have the same GID. The duplicate GID is eliminated by using GID in the dictionary germplasmDict. The same
 approach is used for plot_id in the dictionary plotDict.
@@ -12,24 +12,43 @@ approach is used for plot_id in the dictionary plotDict.
 The Excel file structure is:
 
 Row 1 Col 1: 'TID'        Row 1 Col 2: <tid value>
+
 Row 2 Col 1: 'OCC'        Row 2 Col 2: <occ value>
+
 Row 3 Col 1: 'Trial Name' Row 3 Col 2: <trial name value>
+
 Row 4 Col 1: 'Trial Abbr' Row 4 Col 2: <trial abbreviation value>
+
 Row 5 Col 1: 'Cycle'      Row 5 Col 2: <cycle value>
+
 Row 6 Col 1: 'Program'    Row 6 Col 2; <program value>
+
 Row 7 Blank
+
 Row 8 Column Headings for plot and germplasm data columns
+
   Column 1: CID
+
   Column 2: SID
+
   Column 3: GID
+
   Column 4: Cross Name
+
   Column 5: Selection History
+
   Column 6: Origin (Seed Source)
+
   Column 7: Plot
+
   Column 8: Rep
+
   Column 9: SubBlock
+
   Column 10: Entry
+
 Row 9 to EOF: plot and germplasm data values
+
 
 Error Handling:
 
