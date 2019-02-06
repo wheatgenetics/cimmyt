@@ -111,9 +111,7 @@ Row 8 Column Headings for plot and germplasm data columns
 
 Row 9 to EOF: plot and germplasm data values
 
-### convert_iwis_to_db_plots_germplasm_south_asia
-
-##generate_mexico_fieldbook_files_from_database
+### generate_mexico_fieldbook_files_from_database
 
 ### read_and_annotate_field_map
 
