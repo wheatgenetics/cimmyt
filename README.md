@@ -140,6 +140,27 @@ Fieldbook_19_OBR_YTBW_B5I.csv
 
 ### generate_fieldbook_files_from_database_by_condition
 
+This program will generate CIMMYT Field Book import files from plots and germplasm tables in the cimmyt database.
+It will generate one file for all trials and conditions for a given year and location.
+
+**INPUT Parameters:**
+
+-y,--year,help=The iyear to generate fieldbook file for
+-l,--location,help=The ilocation to generate fieldbook file for, default=OBR
+-c,--condition,help=The icondition to generate fieldbook file for
+
+**OUTPUTS:**
+
+A csv file containing data for import into Field Book.
+
+The file naming convention is:
+
+Fieldbook_<year>_<location>_<condition>.csv
+
+***Example:***
+
+Fieldbook_19_OBR_B5I.csv
+
 ### generate_fieldbook_files_from_database_by_tidocc
 
 This program will generate CIMMYT Field Book import files from plots and germplasm tables in the cimmyt database.
@@ -164,4 +185,20 @@ FieldBook_YTHPB5IR_06_plots-601-690.csv
 
 ### read_plot_shapefile
 
+This program will read a shapefile representing one or more plots and store them as plot polygons in the cimmyt plot_map
+table.
+
+**INPUT Parameters:**
+
+-i, --input,help= Path to Shapefile to import into the database.
+
+**OUTPUT**
+
+Database plot_map table populated with plots found in shape file.
+
+
 ### write_plot_shapefile
+
+This program will read one or more plot polygons from the cimmyt plot_map able and write them to a shapefile.
+
+-o, --output ,help= Shapefile to be created...

@@ -4,6 +4,9 @@
 #
 # Version: 0.1 August 7,2018 Initial Version
 #
+# This program will read a shapefile representing one or more plots and store them as plot polygons in the plot_map
+# table.
+#
 # INPUT: Path to shapefile to be read into database
 #
 # OUTPUT: Database plot_map table populated with plots found in shape file.
@@ -65,7 +68,7 @@ def commit_and_close_db_connection(cursor,cnx):
 #------------------------------------------------------------------------
 
 cmdline = argparse.ArgumentParser()
-cmdline.add_argument('-i','--input',help='Shapefile to import...')
+cmdline.add_argument('-i','--input',help='Path to Shapefile to import...')
 args=cmdline.parse_args()
 inputFile=args.input
 
@@ -92,7 +95,7 @@ with fiona.open(inputFile) as plot:
         plotMapPolygon=dumps(plotShape.convex_hull)
         plotMapRow=(plotId,plotMapPolygon)
         try:
-            #cursorA.execute(plotMapInsert, plotMapRow)
+            cursorA.execute(plotMapInsert, plotMapRow)
             plotInserts+=1
             print()
         except Exception as e:
