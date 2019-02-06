@@ -10,18 +10,18 @@
 
 import mysql.connector
 from mysql.connector import errorcode
-import test_config
+import config
 import sys
 import csv
 import argparse
 
-def open_db_connection(test_config):
+def open_db_connection(config):
 
     # Connect to the HTP database
         try:
-            cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD,
-                                          host=test_config.HOST, port=test_config.PORT,
-                                          database=test_config.DATABASE)
+            cnx = mysql.connector.connect(user=config.USER, password=config.PASSWORD,
+                                          host=config.HOST, port=config.PORT,
+                                          database=config.DATABASE)
             print('Connecting to Database: ' + cnx.database)
 
         except mysql.connector.Error as err:
@@ -59,44 +59,23 @@ def close_db_connection(cursor,cnx):
 cmdline = argparse.ArgumentParser()
 cmdline.add_argument('-t','--tid',help='The tid to generate fieldbook file for')
 cmdline.add_argument('-o','--occ',help='The occ to generate fieldbook file for')
-#cmdline.add_argument('-y','--year',help='The iyear to generate fieldbook file for')
-#cmdline.add_argument('-l','--location',help='The ilocation to generate fieldbook file for', default='OBR')
-#cmdline.add_argument('-t','--trial',help='The itrial to generate fieldbook file for')
-#cmdline.add_argument('-c','--condition',help='The icondition to generate fieldbook file for')
 
 
 args=cmdline.parse_args()
-
-#iyear=args.year
-#ilocation=args.location
-#itrial=args.trial
-#icondition=args.condition
-#plotId=iyear+'-'+ilocation+'-'+itrial+'-'+icondition+'%'
 
 tid=args.tid
 occ=args.occ
 fieldBookRecord=[]
 fieldBookList=[]
 
-
-
-#fieldBookQuery="Select plots.plot_id,plots.plot_no,plots.rep,plots.entry,concat(plots.itrial,plots.icondition) " \
-#               "as trial,germplasm.gid,germplasm.cross_name as pedigree from plots,germplasm " \
-#               "where plots.gid=germplasm.gid and plots.plot_id like %s order by plots.plot_no"
-
-#fieldBookQuery="Select plots.plot_id,plots.plot_no,plots.rep,plots.entry,plots.trial " \
-#               "as trial,germplasm.gid,germplasm.cross_name as pedigree from plots,germplasm " \
-#               "where plots.gid=germplasm.gid and plots.plot_id like %s order by plots.plot_no"
-
 fieldBookQuery="Select plots.plot_id,plots.plot_no,plots.rep,plots.entry,plots.trial " \
                "as trial,germplasm.gid,germplasm.cross_name as pedigree from plots,germplasm " \
-               "where plots.gid=germplasm.gid and plots.tid like %s and plots.occ like %sorder by plots.plot_no"
+               "where plots.gid=germplasm.gid and plots.tid = %s and plots.occ = %s order by plots.plot_no"
 
 print("")
 print("Connecting to Database...")
-cursorA,cnxA=open_db_connection(test_config)
-#cursorA.execute(fieldBookQuery, (plotId, ))
-cursorA.execute(fieldBookQuery, (tid,occ ))
+cursorA,cnxA=open_db_connection(config)
+cursorA.execute(fieldBookQuery, (tid,occ))
 
 if cursorA.rowcount != 0:
     for rowA in cursorA:
@@ -117,8 +96,7 @@ else:
 occStr=occ.zfill(3)
 startPlot=str(fieldBookList[0][1])
 endPlot=str(fieldBookList[-1][1])
-#outFile=tid + '_' + occStr + '_' + 'Fieldbook_File.csv'
-outFile=trial + '_' + startPlot + '-' + endPlot + '.csv'
+outFile="FieldBook_"+ trial + '_plots-' + startPlot + '-' + endPlot + '.csv'
 print('Generating Field Book CSV file: ' + outFile )
 #
 # Write out the metadata file

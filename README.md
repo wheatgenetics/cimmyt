@@ -126,7 +126,7 @@ This program will generate CIMMYT Field Book import files from plots and germpla
 -t,--trial,help=The itrial to generate fieldbook file for
 -c,--condition,help=The icondition to generate fieldbook file for
 
-**OUTPUTS
+**OUTPUTS:**
 
 A csv file containing data for import into Field Book.
 
@@ -134,13 +134,33 @@ The file naming convention is:
 
 Fieldbook_<year>_<location>_<trial>_<condition>.csv
 
-Example:
+***Example:***
 
 Fieldbook_19_OBR_YTBW_B5I.csv
 
 ### generate_fieldbook_files_from_database_by_condition
 
 ### generate_fieldbook_files_from_database_by_tidocc
+
+This program will generate CIMMYT Field Book import files from plots and germplasm tables in the cimmyt database.
+It will generate one file for a given tid occ combination (i.e. for one trial).
+
+**INPUT Parameters:**
+
+'-t','--tid',help='The tid to generate fieldbook file for'
+'-o','--occ',help='The occ to generate fieldbook file for'
+
+**OUTPUTS:**
+
+A csv file containing data for import into Field Book.
+
+The file naming convention is:
+
+Fieldbook_<trial>_plots_<start_plot>_<end_plot>.csv
+
+***Example:***
+
+FieldBook_YTHPB5IR_06_plots-601-690.csv
 
 ### read_plot_shapefile
 
