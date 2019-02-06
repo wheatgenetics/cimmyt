@@ -74,12 +74,6 @@ fcondition=args.condition
 fieldBookRecord=[]
 fieldBookList=[]
 
-
-
-#fieldBookQuery="Select plots.plot_id,plots.plot_no,plots.rep,plots.entry,concat(plots.itrial,plots.icondition) " \
-#               "as trial,germplasm.gid,germplasm.cross_name as pedigree from plots,germplasm " \
-#               "where plots.gid=germplasm.gid and plots.plot_id like %s order by plots.plot_no"
-
 fieldBookQuery="Select plots.plot_id,plots.plot_no,plots.rep,plots.entry,plots.trial " \
                "as trial,germplasm.gid,germplasm.cross_name as pedigree from plots,germplasm " \
                "where plots.gid=germplasm.gid and (plots.iyear=%s and plots.ilocation=%s and plots.itrial=%s and plots.icondition=%s) " \

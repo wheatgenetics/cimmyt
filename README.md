@@ -115,11 +115,32 @@ Row 9 to EOF: plot and germplasm data values
 
 ### read_and_annotate_field_map
 
-### generate_mexico_fieldbook_files_from_database_by_condition_and_trial
+### generate_fieldbook_files_from_database_by_condition_and_trial
 
-### generate_mexico_fieldbook_files_from_database_by_condition
+This program will generate CIMMYT Field Book import files from plots and germplasm tables in the cimmyt database.
 
-### generate_mexico_fieldbook_files_from_database_by_tidocc
+**INPUT Parameters:**
+
+-y,--year,help=The iyear to generate fieldbook file for
+-l,--location,help=The ilocation to generate fieldbook file for, default=OBR
+-t,--trial,help=The itrial to generate fieldbook file for
+-c,--condition,help=The icondition to generate fieldbook file for
+
+**OUTPUTS
+
+A csv file containing data for import into Field Book.
+
+The file naming convention is:
+
+Fieldbook_<year>_<location>_<trial>_<condition>.csv
+
+Example:
+
+Fieldbook_19_OBR_YTBW_B5I.csv
+
+### generate_fieldbook_files_from_database_by_condition
+
+### generate_fieldbook_files_from_database_by_tidocc
 
 ### read_plot_shapefile
 
