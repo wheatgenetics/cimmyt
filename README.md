@@ -77,7 +77,7 @@ This version will handle a different IWIS format for segregated populations F6-F
 
 N.B.Loading of germplasm table is disabled since all fields required are not in the input file e.g. selection_history.
 
-The Excel file structure is as follows:
+The Excel file structure for F6-F7 Segregated populations is as follows:
 
 Row 1 Col 1: 'TID'        Row 1 Col 2: <tid value>
 
@@ -110,8 +110,6 @@ Row 8 Column Headings for plot and germplasm data columns
   Column 8: Rep
 
 Row 9 to EOF: plot and germplasm data values
-
-### convert_iwis_to_db_germplasm_segregated.py
 
 ### convert_iwis_to_db_plots_germplasm_south_asia.py
 

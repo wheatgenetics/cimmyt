@@ -5,10 +5,10 @@
 # Version: 0.2 October 25,2017 Eliminated duplicate gid in germplasm data records in IWIS files by using Dictionary
 # Version: 0.3 February 13,2018 Created new version to hand different IWIS for Segregated populations F6-F7
 #
-# N.B.Loading of germplasm table is disabled since all fields required are not in the inout file e.g. selection_history.
+# N.B.Loading of germplasm table is disabled since all fields required are not in the input file e.g. selection_history.
 #
-# This program will take a CIMMYT IWIS Excel .xls export file that contains plot and germplasm data in each row and populates
-# the plot and germplasm tables in the CIMMYT database.
+# This program will take a CIMMYT IWIS Excel .xls export file that contains plot and germplasm data in each row and
+# populates the plot and germplasm tables in the CIMMYT database.
 #
 # Note that multiple rows can occur for each GID in the IWIS file due to the fact that there are replicated plots
 # which will have the same GID. The duplicate GID is eliminated by using GID in the dictionary germplasmDict. The same
