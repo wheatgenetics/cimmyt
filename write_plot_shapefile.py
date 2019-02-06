@@ -65,8 +65,10 @@ def commit_and_close_db_connection(cursor,cnx):
 #------------------------------------------------------------------------
 
 cmdline = argparse.ArgumentParser()
+cmdline.add_argument('-p','--plotID',help='Plot_id or partial plot_id of the plot polygon(s) to be extracted...')
 cmdline.add_argument('-o','--output',help='Shapefile to be created...')
 args=cmdline.parse_args()
+plots=args.plotID + '%'
 outFile=args.output
 
 #Define a polygon feature geometry with one attribute
@@ -77,12 +79,12 @@ schema = {
 
 # Query to populate the plot_map table in the CIMMYT database
 
-plotMapSelect = "SELECT plot_id,ST_AsText(plot_polygon) FROM plot_map_test ORDER BY plot_id"
+plotMapSelect = "SELECT plot_id,ST_AsText(plot_polygon) FROM plot_map WHERE plot_id LIKE %s ORDER BY plot_id"
 
 # Open database connection
 
 cursorA, cnxA = open_db_connection(test_config)
-cursorA.execute(plotMapSelect,)
+cursorA.execute(plotMapSelect,(plots,))
 
 plotCount=0
 plotList=[]
