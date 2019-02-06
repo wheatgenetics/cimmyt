@@ -71,7 +71,7 @@ to be ignored.
 
 Note that there are some variants of this program that handle slightly different input formats:
 
-### convert_iwis_to_db_plots_germplasm_segregated.py
+### convert_iwis_to_db_plots_germplasm_segregated
 
 This version will handle a different IWIS format for segregated populations F6-F7
 
@@ -111,8 +111,18 @@ Row 8 Column Headings for plot and germplasm data columns
 
 Row 9 to EOF: plot and germplasm data values
 
-### convert_iwis_to_db_plots_germplasm_south_asia.py
+### convert_iwis_to_db_plots_germplasm_south_asia
 
 ##generate_mexico_fieldbook_files_from_database
 
 ### read_and_annotate_field_map
+
+### generate_mexico_fieldbook_files_from_database_by_condition_and_trial
+
+### generate_mexico_fieldbook_files_from_database_by_condition
+
+### generate_mexico_fieldbook_files_from_database_by_tidocc
+
+### read_plot_shapefile
+
+### write_plot_shapefile
