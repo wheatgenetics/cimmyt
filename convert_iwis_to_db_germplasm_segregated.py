@@ -5,7 +5,8 @@
 # Version: 0.2 October 25,2017 Eliminated duplicate gid in germplasm data records in IWIS files by using Dictionary
 # Version: 0.3 February 13,2018 Created new version to hand different IWIS for Segregated populations F6-F7
 #
-# N.B.Loading of germplasm table is disabled since all fields required are not in the input file e.g. selection_history.
+# N.B. This variant handles loading of partial germplasm data for F6-F7 populations where selection_history is not
+# yet defined.
 #
 # This program will take a CIMMYT IWIS Excel .xls export file that contains plot and germplasm data in each row and
 # populates the plot and germplasm tables in the CIMMYT database.
