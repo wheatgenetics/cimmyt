@@ -201,4 +201,6 @@ Database plot_map table populated with plots found in shape file.
 
 This program will read one or more plot polygons from the cimmyt plot_map able and write them to a shapefile.
 
+-p, --plotID , help= Plot_id or partial plot_id of plot polygon(s) to be extracted SQL % symbol will select all plots.
+
 -o, --output ,help= Shapefile to be created...
