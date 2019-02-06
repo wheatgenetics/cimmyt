@@ -1,4 +1,4 @@
-Tools for CIMMYT Data Automation
+## Tools for CIMMYT Data Automation
 
 ### convert_iwis_to_db_plots_germplasm
 
@@ -49,6 +49,17 @@ Row 8 Column Headings for plot and germplasm data columns
 
 Row 9 to EOF: plot and germplasm data values
 
+**INPUT Parameters:**
+
+-i, --input Full path to the IWIS input file e.g T66_047345_001.xls
+
+-l, --location Location of the plots, default = 'OBR'
+
+ **OUTPUTS:**
+
+New plots found in the IWIS file will be inserted into the database table cimmyt.plots
+
+New germplasm data found in the IWIS file will be inserted into the database table cimmyt.germplasm
 
 Error Handling:
 
@@ -60,7 +71,7 @@ to be ignored.
 
 Note that there are some variants of this program that handle slightly different input formats:
 
-convert_iwis_to_db_plots_germplasm_segregated.py
+### convert_iwis_to_db_plots_germplasm_segregated.py
 
 This version will handle a different IWIS format for segregated populations F6-F7
 
@@ -100,22 +111,9 @@ Row 8 Column Headings for plot and germplasm data columns
 
 Row 9 to EOF: plot and germplasm data values
 
-convert_iwis_to_db_germplasm_segregated.py
+### convert_iwis_to_db_germplasm_segregated.py
 
-convert_iwis_to_db_plots_germplasm_south_asia.py
-
-
-**INPUT Parameters:**
-
--i, --input Full path to the IWIS input file e.g T66_047345_001.xls
-
--l, --location Location of the plots, default = 'OBR'
-
- **OUTPUTS:**
-
-New plots found in the IWIS file will be inserted into the database table cimmyt.plots
-
-New germplasm data found in the IWIS file will be inserted into the database table cimmyt.germplasm
+### convert_iwis_to_db_plots_germplasm_south_asia.py
 
 ##generate_mexico_fieldbook_files_from_database
 
