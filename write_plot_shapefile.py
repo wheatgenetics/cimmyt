@@ -65,7 +65,7 @@ def commit_and_close_db_connection(cursor,cnx):
 #------------------------------------------------------------------------
 
 cmdline = argparse.ArgumentParser()
-cmdline.add_argument('-p','--plotID',help='Plot_id or partial plot_id of the plot polygon(s) to be extracted...')
+cmdline.add_argument('-p','--plotID',help='Plot_id or partial plot_id of the plot polygon(s) to be extracted...',default = '%')
 cmdline.add_argument('-o','--output',help='Shapefile to be created...')
 args=cmdline.parse_args()
 plots=args.plotID + '%'

@@ -111,9 +111,6 @@ Row 8 Column Headings for plot and germplasm data columns
 
 Row 9 to EOF: plot and germplasm data values
 
-### generate_mexico_fieldbook_files_from_database
-
-### read_and_annotate_field_map
 
 ### generate_fieldbook_files_from_database_by_condition_and_trial
 
@@ -182,6 +179,59 @@ Fieldbook_<trial>_plots_<start_plot>_<end_plot>.csv
 ***Example:***
 
 FieldBook_YTHPB5IR_06_plots-601-690.csv
+
+### read_and_annotate_field_map
+
+This program will read a CIMMYT Mexico field map in xlsx format, look up the full plot_id for each plot in the plots
+table, generate annotation data for each plot-no with full plot_id, row and column identifiers and generate a new
+field map including the annotated plot_id information.
+
+As a secondary task it will populate the row,column database columns for each plot
+
+Note Row and Column Indices in xlsxWriter are zero based.
+
+References:
+  1. pandas: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_excel.html
+  2. Xlsxwriter: https://xlsxwriter.readthedocs.io
+
+**INPUT Parameters:**
+
+-f,--folder,help=The full path to the folder containing the field map files.
+-i,--infile,help=The field map input file name.
+-o,--outfile,help=The annotated field map output file name.
+-y,--year,help=The iyear to generate field map file for
+-l,--location,help=The ilocation to generate field map file for, default='OBR'
+-t,--trial,help=The itrial to generate field map file for
+-c,--condition,help=The icondition to generate field map file for
+
+**OUTPUT**
+
+An xlsx file with name being a concatenation of the folder and outfile input parameters.
+
+Example:
+
+-f = /Desktop/EYTBW-Fieldmaps/
+-i = EYTBW-Flat-5IR_101-390.xlsx
+-o = EYTBW-Flat-5IR_101-390_a.xlsx (_a indicates annotated)
+
+Filename: /Desktop/EYTBW-Fieldmaps/EYTBW-Flat-5IR_101-390_a.xlsx
+
+### read_and_annotate_field_map_F5I
+
+### read_and_annotate_field_map_F6-F7
+
+**OUTPUT**
+
+An xlsx file with name being a concatenation of the folder and outfile input parameters.
+
+Example:
+
+-f = /Desktop/F6-F7-Fieldmaps/
+-i = PCBW_1-1100-SPC.xlsx
+-o = PCBW_1-1100-SPC_a.xlsx (_a indicates annotated)
+
+Filename: /Desktop/Fieldmap_Updates_2018/F6-F7-Fieldmaps/PCBW_1-1100-SPC_a.xlsx
+
 
 ### read_plot_shapefile
 
