@@ -61,7 +61,7 @@ New plots found in the IWIS file will be inserted into the database table cimmyt
 
 New germplasm data found in the IWIS file will be inserted into the database table cimmyt.germplasm
 
-Error Handling:
+**Error Handling:**
 
 If any error occurs while attempting to insert into plots table, an exception will be thrown and the program exited.
 
@@ -221,7 +221,7 @@ References:
 
 An xlsx file with name being a concatenation of the folder and outfile input parameters.
 
-Example:
+**Example:**
 
 -f = /Desktop/YTBW-Fieldmaps/
 -i = YTBWB5IR_101-390.xlsx
@@ -259,7 +259,7 @@ Note Row and Column Indices in xlsxWriter are zero based.
 
 An xlsx file with name being a concatenation of the folder and outfile input parameters.
 
-Example:
+**Example:**
 
 -f = /Desktop/EYTBW-Fieldmaps/
 -i = EYTBW-Flat-5IR_101-390.xlsx
@@ -274,7 +274,7 @@ ________________________________________________________________________________
 
 An xlsx file with name being a concatenation of the folder and outfile input parameters.
 
-Example:
+**Example:**
 
 -f = /Desktop/F6-F7-Fieldmaps/
 -i = PCBW_1-1100-SPC.xlsx
