@@ -71,7 +71,7 @@ to be ignored.
 
 ________________________________________________________________________________________________________________________
 
-Note that there are some variants of this program that handle slightly different input formats:
+Note that there are some variants of IWIS data loading program that handle slightly different input formats:
 
 ### convert_iwis_to_db_plots_germplasm_segregated
 
@@ -135,7 +135,7 @@ The file naming convention is:
 
 Fieldbook_<year>_<location>_<trial>_<condition>.csv
 
-***Example:***
+**Example:**
 
 Fieldbook_19_OBR_YTBW_B5I.csv
 
@@ -161,7 +161,7 @@ The file naming convention is:
 
 Fieldbook_<year>_<location>_<condition>.csv
 
-***Example:***
+**Example:**
 
 Fieldbook_19_OBR_B5I.csv
 
@@ -186,7 +186,7 @@ The file naming convention is:
 
 Fieldbook_<trial>_plots_<start_plot>_<end_plot>.csv
 
-***Example:***
+**Example:**
 
 FieldBook_YTHPB5IR_06_plots-601-690.csv
 
@@ -231,6 +231,7 @@ Filename: /Desktop/EYTBW-Flat_Fieldmaps/YTBWB5IR_101-390_a.xlsx
 
 ________________________________________________________________________________________________________________________
 
+Note that there are some variants of the field map annotation program that handle slightly different input formats:
 
 ### read_and_annotate_field_map_F5I
 
