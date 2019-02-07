@@ -69,6 +69,8 @@ If any error occurs while attempting to insert into germplams table, an exceptio
 exited. However, note that the insert statement used to insert into the germplasm table allows duplicate key errors
 to be ignored.
 
+________________________________________________________________________________________________________________________
+
 Note that there are some variants of this program that handle slightly different input formats:
 
 ### convert_iwis_to_db_plots_germplasm_segregated
@@ -210,13 +212,44 @@ An xlsx file with name being a concatenation of the folder and outfile input par
 
 Example:
 
+-f = /Desktop/YTBW-Fieldmaps/
+-i = YTBWB5IR_101-390.xlsx
+-o = YTBWB5IR_101-390_a.xlsx (_a indicates annotated)
+
+Filename: /Desktop/EYTBW-Flat_Fieldmaps/YTBWB5IR_101-390_a.xlsx
+
+### read_and_annotate_field_map_F5I
+
+N.B. F5I plots have a different spreadsheet layout (in terms or where the spreadsheet rows and columns start.)
+
+This program will read a CIMMYT Mexico field map in xlsx format, look up the full plot_id for each plot in the plots
+table, generate annotation data for each plot-no with full plot_id, row and column identifiers and generate a new
+field map including the annotated plot_id information.
+
+As a secondary task it will populate the row,column database columns for each plot
+
+Note Row and Column Indices in xlsxWriter are zero based.
+
+**INPUT Parameters:**
+
+-f,--folder,help=The full path to the folder containing the field map files.
+-i,--infile,help=The field map input file name.
+-o,--outfile,help=The annotated field map output file name.
+-y,--year,help=The iyear to generate field map file for
+-l,--location,help=The ilocation to generate field map file for, default='OBR'
+-t,--trial,help=The itrial to generate field map file for
+-c,--condition,help=The icondition to generate field map file for
+
+**OUTPUT**
+
+An xlsx file with name being a concatenation of the folder and outfile input parameters.
+
+Example:
+
 -f = /Desktop/EYTBW-Fieldmaps/
 -i = EYTBW-Flat-5IR_101-390.xlsx
 -o = EYTBW-Flat-5IR_101-390_a.xlsx (_a indicates annotated)
 
-Filename: /Desktop/EYTBW-Fieldmaps/EYTBW-Flat-5IR_101-390_a.xlsx
-
-### read_and_annotate_field_map_F5I
 
 ### read_and_annotate_field_map_F6-F7
 
@@ -244,7 +277,7 @@ table.
 
 **OUTPUT**
 
-Database plot_map table populated with plots found in shape file.
+Database plot_map table populated with plot polygons found in shape file.
 
 
 ### write_plot_shapefile
