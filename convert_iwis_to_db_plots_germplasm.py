@@ -193,7 +193,7 @@ else:
 
 # Insert data into plots table. Exit if any error occurs, only commit changes when all updates are made.
 count_plots = "SELECT * from plots"
-insert_plot = "INSERT IGNORE INTO plots (plot_id,iyear,ilocation,itrial,icondition,plot_no,trial,seed_source,planting_date,site,year,location,cycle,conditions,rep,block,subblock,col,row,entry,purpose,gid,tid,occ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+insert_plot = "INSERT IGNORE INTO plots (`plot_id`,`iyear`,`ilocation`,`itrial`,`icondition`,`plot_no`,`trial`,`seed_source`,`planting_date`,`site`,`year`,`location`,`cycle`,`conditions`,`rep`,`block`,`subblock`,`col`,`row`,`entry`,`purpose`,`gid`,`tid`,`occ`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 try:
     print("Inserting data into plots table...")
