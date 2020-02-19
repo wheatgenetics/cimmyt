@@ -43,7 +43,6 @@
 #
 #
 
-
 from pyexcel_xls import get_data
 import sys
 import mysql.connector
@@ -65,12 +64,10 @@ iconditions['BEHT']='EHT'
 iconditions['DRIP']='DRM'
 
 # location is a dictionary that translates from CIMMYT database ilocation to IWIS location
-
 locations={}
 locations['OBR']='Obregon'
 
 # Get command line input.
-
 cmdline = argparse.ArgumentParser()
 cmdline.add_argument('-i','--input',help='IWIS input file')
 cmdline.add_argument('-l','--location',help='Location of the plots', default='OBR')
@@ -92,7 +89,6 @@ col = None
 row = None
 
 # Read in the data from the Excel IWIS file
-
 data = get_data(inputFile)
 
 print()
@@ -196,7 +192,6 @@ else:
 
 
 # Insert data into plots table. Exit if any error occurs, only commit changes when all updates are made.
-
 count_plots = "SELECT * from plots"
 insert_plot = "INSERT IGNORE INTO plots (plot_id,iyear,ilocation,itrial,icondition,plot_no,trial,seed_source,planting_date,site,year,location,cycle,conditions,rep,block,subblock,col,row,entry,purpose,gid,tid,occ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
@@ -227,7 +222,6 @@ except mysql.connector.Error as err:
 
 # Insert data into germplasm table. Exit if any error occurs, only commit changes when all updates are made.
 # Note that INSERT IGNORE allows duplicate key errors to be ignored and processing to continue
-
 count_germplasm = "SELECT * FROM germplasm"
 insert_germplasm = "INSERT IGNORE INTO germplasm (gid,cid,sid,selection_history,cross_name) VALUES (%s,%s,%s,%s,%s)"
 
