@@ -101,7 +101,7 @@ for item in data['Sheet1']:
         print('TID:',tid)
     elif index == 1:
         occ = data['Sheet1'][index][1]
-        print('OCC',occ)
+        print('OCC:',occ)
     elif index == 2:
         trial=data['Sheet1'][index][1]
         if 'BW' in trial:
