@@ -51,36 +51,37 @@ import test_config
 from collections import OrderedDict
 import argparse
 
-plotDict=OrderedDict()
+plotDict = OrderedDict()
 germplasmDict = OrderedDict()
 
 # condition is a dictionary that translates from CIMMYT database icondition to IWIS condition
-iconditions={}
-iconditions['B5IR']='B5I'
-iconditions['B2IR']='B2I'
-iconditions['BLHT']='LHT'
-iconditions['F5IR']='F5I'
-iconditions['BEHT']='EHT'
-iconditions['DRIP']='DRM'
+iconditions = {}
+iconditions['B5IR'] = 'B5I'
+iconditions['B2IR'] = 'B2I'
+iconditions['BLHT'] = 'LHT'
+iconditions['F5IR'] = 'F5I'
+iconditions['BEHT'] = 'EHT'
+iconditions['DRIP'] = 'DRM'
 
 # location is a dictionary that translates from CIMMYT database ilocation to IWIS location
-locations={}
-locations['OBR']='Obregon'
+locations = {}
+locations['OBR'] = 'Obregon'
 
 # Get command line input.
 cmdline = argparse.ArgumentParser()
-cmdline.add_argument('-i','--input',help='IWIS input file')
-cmdline.add_argument('-l','--location',help='Location of the plots', default='OBR')
+cmdline.add_argument('-i', '--input', help='IWIS input file')
+cmdline.add_argument('-l', '--location',
+                     help='Location of the plots', default='OBR')
 #cmdline.add_argument('-c','--icondition',help='Condition associated with a trial', default='B5I')
 
-args=cmdline.parse_args()
+args = cmdline.parse_args()
 
 
-inputFile=args.input
-ilocation=args.location
-location=locations[ilocation]
-#icondition=args.icondition
-#conditions=condition[icondition]
+inputFile = args.input
+ilocation = args.location
+location = locations[ilocation]
+# icondition=args.icondition
+# conditions=condition[icondition]
 seedSource = None
 purpose = None
 plantingDate = None
@@ -98,32 +99,38 @@ index = 0
 for item in data['Sheet1']:
     if index == 0:
         tid = data['Sheet1'][index][1]
-        print('TID:',tid)
+        print('TID:', tid)
     elif index == 1:
         occ = data['Sheet1'][index][1]
-        print('OCC:',occ)
+        print('OCC:', occ)
     elif index == 2:
-        trial=data['Sheet1'][index][1]
+        trial = data['Sheet1'][index][1]
         if 'BW' in trial:
             itrial = data['Sheet1'][index][1].split('BW')[0]+'BW'
-            if itrial=='YTBW':
-                condition='B5IR'
-            elif itrial=='AEYTBW':
-                #itrial='AYT'
-                #condition='BLHT'
-                condition=data['Sheet1'][index][1][6:10]
+
+            print(itrial)
+
+            if itrial == 'YTBW':
+                condition = 'B5IR'
+            elif itrial == 'AEYTBW':
+                # itrial='AYT'
+                # condition='BLHT'
+                condition = data['Sheet1'][index][1][6:10]
                 pass
             else:
-                condition = data['Sheet1'][index][1].split('BW')[1].split('_')[0]
+                condition = data['Sheet1'][index][1].split('BW')[
+                    1].split('_')[0]
+
+            print(condition)
             icondition = iconditions[condition]
         elif 'HP' in trial:
             itrial = data['Sheet1'][index][1].split('HP')[0] + 'HP'
             condition = data['Sheet1'][index][1].split('HP')[1].split('_')[0]
-            icondition=iconditions[condition]
+            icondition = iconditions[condition]
         elif '25TH HIGH RAINFALL' in trial:
-            itrial = 'HRWYT' # Special Case 25TH High Rainfall YT
-            condition='B5IR'
-            icondition=iconditions[condition]
+            itrial = 'HRWYT'  # Special Case 25TH High Rainfall YT
+            condition = 'B5IR'
+            icondition = iconditions[condition]
         elif 'MAPPING POP CALOR' in trial:
             itrial = 'AYT'  # Special Case Heat Trial
             condition = 'BLHT'
@@ -132,47 +139,49 @@ for item in data['Sheet1']:
             itrial = 'AYT'  # Special Case Heat Trial
             condition = 'BLHT'
             icondition = iconditions[condition]
-        print('itrial:',itrial)
-        print('trial:',trial)
-        print('icondition:',icondition)
-        print('conditions:',condition)
+        print('itrial:', itrial)
+        print('trial:', trial)
+        print('icondition:', icondition)
+        print('conditions:', condition)
     elif index == 4:
         cycle = data['Sheet1'][index][1]
-        if 'INT' in cycle: # Special Case 25TH High Rainfall YT
+        if 'INT' in cycle:  # Special Case 25TH High Rainfall YT
             year = cycle[3:7]
-            iyear= cycle[5:7]
+            iyear = cycle[5:7]
         else:
             iyear = data['Sheet1'][index][1].split('-')[1]
             year = '20'+iyear
-        print('iyear:',iyear)
-        print('year',year)
-        print('cycle',cycle)
+        print('iyear:', iyear)
+        print('year', year)
+        print('cycle', cycle)
     elif index == 7:
         header = data['Sheet1'][index]
     elif index > 7:
         cid = data['Sheet1'][index][0]
         sid = data['Sheet1'][index][1]
         gid = data['Sheet1'][index][2]
-        crossName= data['Sheet1'][index][3]
+        crossName = data['Sheet1'][index][3]
         selectionHistory = data['Sheet1'][index][4]
         origin = data['Sheet1'][index][5]
         plot = str(data['Sheet1'][index][6])
         rep = str(data['Sheet1'][index][7])
-        block=None # For Future use. Block not currently supported in IWIS files.
+        # For Future use. Block not currently supported in IWIS files.
+        block = None
         subblock = str(data['Sheet1'][index][8])
         entry = str(data['Sheet1'][index][9])
 
-        plotId=iyear + '-' + ilocation + '-' + itrial + '-' + icondition + '-' + plot
-        plotDict[plotId]=[plotId,iyear,ilocation,itrial,icondition,plot,trial,seedSource,plantingDate,site,year,location,cycle,condition,rep,block,subblock,col,row,entry,purpose,gid,tid,occ]
-        germplasmDict[gid]=[gid,cid,sid,selectionHistory,crossName]
+        plotId = iyear + '-' + ilocation + '-' + itrial + '-' + icondition + '-' + plot
+        plotDict[plotId] = [plotId, iyear, ilocation, itrial, icondition, plot, trial, seedSource, plantingDate,
+                            site, year, location, cycle, condition, rep, block, subblock, col, row, entry, purpose, gid, tid, occ]
+        germplasmDict[gid] = [gid, cid, sid, selectionHistory, crossName]
 
-    index+=1
+    index += 1
 
 # Connect to database and return two cursors: One for insert into the plots table and
 # one for insert into germplasm table
 try:
     cnx = mysql.connector.connect(user=test_config.USER, password=test_config.PASSWORD, host=test_config.HOST,
-                                      port=test_config.PORT,database=test_config.DATABASE)
+                                  port=test_config.PORT, database=test_config.DATABASE)
     print()
     print("Connecting to database " + cnx.database + " ...")
     print()
@@ -198,12 +207,13 @@ insert_plot = "INSERT IGNORE INTO plots (`plot_id`,`iyear`,`ilocation`,`itrial`,
 try:
     print("Inserting data into plots table...")
     cursorC.execute(count_plots,)
-    startPlotCount=cursorC.rowcount
-    plotInserts=0
-    for plotId,p in plotDict.items():
-        plotRow=(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8],p[9],p[10],p[11],p[12],p[13],p[14],p[15],p[16],p[17],p[18],p[19],p[20],p[21],p[22],p[23])
-        cursorA.execute(insert_plot,plotRow)
-        plotInserts+=1
+    startPlotCount = cursorC.rowcount
+    plotInserts = 0
+    for plotId, p in plotDict.items():
+        plotRow = (p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9], p[10], p[11],
+                   p[12], p[13], p[14], p[15], p[16], p[17], p[18], p[19], p[20], p[21], p[22], p[23])
+        cursorA.execute(insert_plot, plotRow)
+        plotInserts += 1
     cnx.commit()
     cursorA.close()
     cursorC.execute(count_plots,)
@@ -228,18 +238,19 @@ insert_germplasm = "INSERT IGNORE INTO germplasm (gid,cid,sid,selection_history,
 try:
     print("Inserting data into germplasm table...")
     cursorD.execute(count_germplasm, )
-    startGermplasmCount=cursorD.rowcount
-    germplasmInserts=0
-    for plotId,g in germplasmDict.items():
-        germplasmRow=(g[0],g[1],g[2],g[3],g[4])
-        cursorB.execute(insert_germplasm,germplasmRow)
-        germplasmInserts+=1
+    startGermplasmCount = cursorD.rowcount
+    germplasmInserts = 0
+    for plotId, g in germplasmDict.items():
+        germplasmRow = (g[0], g[1], g[2], g[3], g[4])
+        cursorB.execute(insert_germplasm, germplasmRow)
+        germplasmInserts += 1
     cnx.commit()
     cursorB.close()
     cursorD.execute(count_germplasm, )
     endGermplasmCount = cursorD.rowcount
     print("Germplasm Records Processed :" + str(germplasmInserts))
-    print("Unique Germplasm Records Inserted: " + str(endGermplasmCount - startGermplasmCount))
+    print("Unique Germplasm Records Inserted: " +
+          str(endGermplasmCount - startGermplasmCount))
     cursorD.close()
 except mysql.connector.Error as err:
     print()
@@ -254,5 +265,3 @@ print("Program executed successfully. Exiting...")
 print()
 
 sys.exit()
-
-
