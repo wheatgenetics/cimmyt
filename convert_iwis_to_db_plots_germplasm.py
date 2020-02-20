@@ -62,6 +62,7 @@ iconditions['BLHT'] = 'LHT'
 iconditions['F5IR'] = 'F5I'
 iconditions['BEHT'] = 'EHT'
 iconditions['DRIP'] = 'DRM'
+iconditions['FDRIP'] = 'DRM'
 
 # location is a dictionary that translates from CIMMYT database ilocation to IWIS location
 locations = {}
@@ -105,10 +106,9 @@ for item in data['Sheet1']:
         print('OCC:', occ)
     elif index == 2:
         trial = data['Sheet1'][index][1]
+        
         if 'BW' in trial:
             itrial = data['Sheet1'][index][1].split('BW')[0]+'BW'
-
-            print(itrial)
 
             if itrial == 'YTBW':
                 condition = 'B5IR'
@@ -117,11 +117,14 @@ for item in data['Sheet1']:
                 # condition='BLHT'
                 condition = data['Sheet1'][index][1][6:10]
                 pass
+            elif itrial == 'EYTBW':
+                # itrial='AYT'
+                # condition='BLHT'
+                condition = data['Sheet1'][index][1][5:10]
+                pass
             else:
-                condition = data['Sheet1'][index][1].split('BW')[
-                    1].split('_')[0]
+                condition = data['Sheet1'][index][1].split('BW')[1].split('_')[0]
 
-            print(condition)
             icondition = iconditions[condition]
         elif 'HP' in trial:
             itrial = data['Sheet1'][index][1].split('HP')[0] + 'HP'
