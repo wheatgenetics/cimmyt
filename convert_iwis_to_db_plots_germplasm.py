@@ -117,11 +117,11 @@ for item in data['Sheet1']:
                 # condition='BLHT'
                 condition = data['Sheet1'][index][1][6:10]
                 pass
-            elif itrial == 'EYTBW':
-                # itrial='AYT'
-                # condition='BLHT'
-                condition = data['Sheet1'][index][1][5:10]
-                pass
+            # elif itrial == 'EYTBW':
+            #     # itrial='AYT'
+            #     # condition='BLHT'
+            #     condition = data['Sheet1'][index][1][5:10]
+            #     pass
             else:
                 condition = data['Sheet1'][index][1].split('BW')[1].split('_')[0]
 
