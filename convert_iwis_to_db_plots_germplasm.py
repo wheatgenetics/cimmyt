@@ -155,8 +155,8 @@ for item in data['Sheet1']:
             iyear = data['Sheet1'][index][1].split('-')[1]
             year = '20'+iyear
         print('iyear:', iyear)
-        print('year', year)
-        print('cycle', cycle)
+        print('year:', year)
+        print('cycle:', cycle)
     elif index == 7:
         header = data['Sheet1'][index]
     elif index > 7:
@@ -251,7 +251,7 @@ try:
     cursorB.close()
     cursorD.execute(count_germplasm, )
     endGermplasmCount = cursorD.rowcount
-    print("Germplasm Records Processed :" + str(germplasmInserts))
+    print("Germplasm Records Processed:" + str(germplasmInserts))
     print("Unique Germplasm Records Inserted: " +
           str(endGermplasmCount - startGermplasmCount))
     cursorD.close()
