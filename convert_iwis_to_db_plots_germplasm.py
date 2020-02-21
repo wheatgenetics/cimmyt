@@ -221,7 +221,7 @@ try:
     cursorA.close()
     cursorC.execute(count_plots,)
     endPlotCount = cursorC.rowcount
-    print("Plot Records Processed :" + str(plotInserts))
+    print("Plot Records Processed: " + str(plotInserts))
     print("Plot Records Inserted: " + str(endPlotCount-startPlotCount))
     print()
     cursorC.close()
@@ -251,7 +251,7 @@ try:
     cursorB.close()
     cursorD.execute(count_germplasm, )
     endGermplasmCount = cursorD.rowcount
-    print("Germplasm Records Processed:" + str(germplasmInserts))
+    print("Germplasm Records Processed: " + str(germplasmInserts))
     print("Unique Germplasm Records Inserted: " +
           str(endGermplasmCount - startGermplasmCount))
     cursorD.close()
